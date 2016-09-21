@@ -1,0 +1,8 @@
+C:/Users/Dylan/Documents/Psoc\ en\ cours/ADXL345/ADXL345_recepteur_13bits/ADXL345_recepteur/ADXL345_recepteur.cydsn/CortexM0/ARM_GCC_493/Debug/CyBootAsmGnu.o : C:/Users/Dylan/Documents/Psoc\ en\ cours/ADXL345/ADXL345_recepteur_13bits/ADXL345_recepteur/ADXL345_recepteur.cydsn/Generated_Source/PSoC4/CyBootAsmGnu.s C:/Users/Dylan/Documents/Psoc\ en\ cours/ADXL345/ADXL345_recepteur_13bits/ADXL345_recepteur/ADXL345_recepteur.cydsn/Generated_Source/PSoC4/cydevicegnu_trm.inc C:/Users/Dylan/Documents/Psoc\ en\ cours/ADXL345/ADXL345_recepteur_13bits/ADXL345_recepteur/ADXL345_recepteur.cydsn/Generated_Source/PSoC4/cyfittergnu.inc 
+
+C:/Users/Dylan/Documents/Psoc\ en\ cours/ADXL345/ADXL345_recepteur_13bits/ADXL345_recepteur/ADXL345_recepteur.cydsn/Generated_Source/PSoC4/CyBootAsmGnu.s : 
+
+C:/Users/Dylan/Documents/Psoc\ en\ cours/ADXL345/ADXL345_recepteur_13bits/ADXL345_recepteur/ADXL345_recepteur.cydsn/Generated_Source/PSoC4/cydevicegnu_trm.inc : 
+
+C:/Users/Dylan/Documents/Psoc\ en\ cours/ADXL345/ADXL345_recepteur_13bits/ADXL345_recepteur/ADXL345_recepteur.cydsn/Generated_Source/PSoC4/cyfittergnu.inc : 
+

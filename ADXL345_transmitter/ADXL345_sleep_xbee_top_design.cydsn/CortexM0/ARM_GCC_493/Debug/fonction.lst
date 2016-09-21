@@ -1,0 +1,3621 @@
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 1
+  10              		.eabi_attribute 34, 0
+  11              		.eabi_attribute 18, 4
+  12              		.code	16
+  13              		.file	"fonction.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.initialisation_projet,"ax",%progbits
+  18              		.align	2
+  19              		.global	initialisation_projet
+  20              		.code	16
+  21              		.thumb_func
+  22              		.type	initialisation_projet, %function
+  23              	initialisation_projet:
+  24              	.LFB34:
+  25              		.file 1 ".\\fonction.c"
+   1:.\fonction.c  **** /* ========================================
+   2:.\fonction.c  ****  *
+   3:.\fonction.c  ****  * Copyright YOUR COMPANY, THE YEAR
+   4:.\fonction.c  ****  * All Rights Reserved
+   5:.\fonction.c  ****  * UNPUBLISHED, LICENSED SOFTWARE.
+   6:.\fonction.c  ****  *
+   7:.\fonction.c  ****  * CONFIDENTIAL AND PROPRIETARY INFORMATION
+   8:.\fonction.c  ****  * WHICH IS THE PROPERTY OF your company.
+   9:.\fonction.c  ****  *
+  10:.\fonction.c  ****  * ========================================
+  11:.\fonction.c  **** */
+  12:.\fonction.c  **** 
+  13:.\fonction.c  **** 
+  14:.\fonction.c  **** #include "fonction.h"
+  15:.\fonction.c  **** #include "stdio.h"
+  16:.\fonction.c  **** #include <math.h>
+  17:.\fonction.c  **** 
+  18:.\fonction.c  **** CY_ISR_PROTO(isr_wdt);
+  19:.\fonction.c  **** 
+  20:.\fonction.c  **** /*
+  21:.\fonction.c  **** cette fonction initialise l'accéléromètre pour une range et une résolution donnée
+  22:.\fonction.c  **** on choisit le mode de lecture en low power !!
+  23:.\fonction.c  **** 
+  24:.\fonction.c  **** param : range : RANGE_2G
+  25:.\fonction.c  ****                 RANGE_4G
+  26:.\fonction.c  ****                 RANGE_8G
+  27:.\fonction.c  ****                 RANGE_16G
+  28:.\fonction.c  ****         
+  29:.\fonction.c  ****         resolution :    FULL_RESOLUTION (13 bits)
+  30:.\fonction.c  ****                         LOW_RESOLUTION  (10 bits)
+  31:.\fonction.c  **** 
+  32:.\fonction.c  ****         rate :  DATA_RATE_400_Hz
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 2
+
+
+  33:.\fonction.c  ****                 DATA_RATE_200_Hz
+  34:.\fonction.c  ****                 DATA_RATE_100_Hz
+  35:.\fonction.c  ****                 DATA_RATE_50_Hz
+  36:.\fonction.c  ****                 DATA_RATE_25_Hz
+  37:.\fonction.c  **** 
+  38:.\fonction.c  **** */
+  39:.\fonction.c  **** void accelero_init(int range, int resolution, int rate){
+  40:.\fonction.c  ****     
+  41:.\fonction.c  ****     Accelero_Start();
+  42:.\fonction.c  ****     // écrit la range et la resolution
+  43:.\fonction.c  ****     accelero_write(DATA_FORMAT_ADDR,(range | resolution)); // | : ou bit à bit
+  44:.\fonction.c  ****     
+  45:.\fonction.c  ****     // écrit le rate voulu et configure l'accéléro en Low power mode
+  46:.\fonction.c  ****     accelero_write(BW_RATE_ADDR, (rate | LOW_POWER));
+  47:.\fonction.c  ****     
+  48:.\fonction.c  ****     Accelero_Stop();
+  49:.\fonction.c  **** }
+  50:.\fonction.c  **** 
+  51:.\fonction.c  **** 
+  52:.\fonction.c  **** /* renvoie directement l'accélération efficace sur chacune des directions
+  53:.\fonction.c  **** param : les adresses des accelerations efficaces
+  54:.\fonction.c  ****         et le nombre d'échantillon sur lequel on calcul la valeur efficace
+  55:.\fonction.c  **** 
+  56:.\fonction.c  **** */
+  57:.\fonction.c  **** 
+  58:.\fonction.c  **** void initialisation_projet(int8 time_sec){
+  26              		.loc 1 58 0
+  27              		.cfi_startproc
+  28              	.LVL0:
+  29 0000 10B5     		push	{r4, lr}
+  30              		.cfi_def_cfa_offset 8
+  31              		.cfi_offset 4, -8
+  32              		.cfi_offset 14, -4
+  33 0002 041C     		mov	r4, r0
+  59:.\fonction.c  ****  
+  60:.\fonction.c  ****     /* Setup ISR for interrupts at WDT counter 0 events. */
+  61:.\fonction.c  ****     WdtIsr_StartEx(isr_wdt);
+  34              		.loc 1 61 0
+  35 0004 1148     		ldr	r0, .L2
+  36              	.LVL1:
+  37 0006 FFF7FEFF 		bl	WdtIsr_StartEx
+  38              	.LVL2:
+  62:.\fonction.c  **** 	
+  63:.\fonction.c  **** 	/* Setup first WDT counter to generate interrupt on match 0x4FFF */
+  64:.\fonction.c  **** 	CySysWdtSetMode(CY_SYS_WDT_COUNTER0,CY_SYS_WDT_MODE_NONE);
+  39              		.loc 1 64 0
+  40 000a 0020     		mov	r0, #0
+  41 000c 0021     		mov	r1, #0
+  42 000e FFF7FEFF 		bl	CySysWdtSetMode
+  43              	.LVL3:
+  65:.\fonction.c  **** 	CySysWdtSetMatch(CY_SYS_WDT_COUNTER0,32000u);
+  44              		.loc 1 65 0
+  45 0012 0020     		mov	r0, #0
+  46 0014 FA21     		mov	r1, #250
+  47 0016 C901     		lsl	r1, r1, #7
+  48 0018 FFF7FEFF 		bl	CySysWdtSetMatch
+  49              	.LVL4:
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 3
+
+
+  66:.\fonction.c  **** 	CySysWdtSetClearOnMatch(CY_SYS_WDT_COUNTER0, 1u);
+  50              		.loc 1 66 0
+  51 001c 0020     		mov	r0, #0
+  52 001e 0121     		mov	r1, #1
+  53 0020 FFF7FEFF 		bl	CySysWdtSetClearOnMatch
+  54              	.LVL5:
+  67:.\fonction.c  **** 	
+  68:.\fonction.c  **** 	/* Enable WDT timers 0 and 1 cascade */
+  69:.\fonction.c  **** 	CySysWdtSetCascade(CY_SYS_WDT_CASCADE_01);
+  55              		.loc 1 69 0
+  56 0024 0820     		mov	r0, #8
+  57 0026 FFF7FEFF 		bl	CySysWdtSetCascade
+  58              	.LVL6:
+  70:.\fonction.c  ****     
+  71:.\fonction.c  **** 	/* Set WDT reset after counter 1 reach 0x0003 */
+  72:.\fonction.c  **** 	CySysWdtSetMatch(CY_SYS_WDT_COUNTER1,time_sec);
+  59              		.loc 1 72 0
+  60 002a 0120     		mov	r0, #1
+  61 002c 211C     		mov	r1, r4
+  62 002e FFF7FEFF 		bl	CySysWdtSetMatch
+  63              	.LVL7:
+  73:.\fonction.c  **** 	CySysWdtSetMode(CY_SYS_WDT_COUNTER1,CY_SYS_WDT_MODE_INT);
+  64              		.loc 1 73 0
+  65 0032 0120     		mov	r0, #1
+  66 0034 0121     		mov	r1, #1
+  67 0036 FFF7FEFF 		bl	CySysWdtSetMode
+  68              	.LVL8:
+  74:.\fonction.c  ****     CySysWdtSetClearOnMatch(CY_SYS_WDT_COUNTER1, 1u);
+  69              		.loc 1 74 0
+  70 003a 0120     		mov	r0, #1
+  71 003c 0121     		mov	r1, #1
+  72 003e FFF7FEFF 		bl	CySysWdtSetClearOnMatch
+  73              	.LVL9:
+  75:.\fonction.c  **** 	
+  76:.\fonction.c  **** 	/* Enable WDT counters 0 and 1 */
+  77:.\fonction.c  **** 	CySysWdtEnable(CY_SYS_WDT_COUNTER0_MASK|CY_SYS_WDT_COUNTER1_MASK);
+  74              		.loc 1 77 0
+  75 0042 0220     		mov	r0, #2
+  76 0044 FF30     		add	r0, r0, #255
+  77 0046 FFF7FEFF 		bl	CySysWdtEnable
+  78              	.LVL10:
+  78:.\fonction.c  **** 
+  79:.\fonction.c  **** }
+  79              		.loc 1 79 0
+  80              		@ sp needed
+  81 004a 10BD     		pop	{r4, pc}
+  82              	.L3:
+  83              		.align	2
+  84              	.L2:
+  85 004c 00000000 		.word	isr_wdt
+  86              		.cfi_endproc
+  87              	.LFE34:
+  88              		.size	initialisation_projet, .-initialisation_projet
+  89              		.global	__aeabi_i2d
+  90              		.global	__aeabi_d2uiz
+  91              		.section	.text.accelero_calcul_norme_acc_efficace,"ax",%progbits
+  92              		.align	2
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 4
+
+
+  93              		.global	accelero_calcul_norme_acc_efficace
+  94              		.code	16
+  95              		.thumb_func
+  96              		.type	accelero_calcul_norme_acc_efficace, %function
+  97              	accelero_calcul_norme_acc_efficace:
+  98              	.LFB36:
+  80:.\fonction.c  **** 
+  81:.\fonction.c  **** 
+  82:.\fonction.c  **** void accelero_acquisition_efficace(uint16 *a_x, uint16 *a_y, uint16 *a_z, uint8 nb_acquisition, uin
+  83:.\fonction.c  ****     
+  84:.\fonction.c  ****     uint16 delay = 0; // en microseconde (à cause du 400 Hz)
+  85:.\fonction.c  ****     
+  86:.\fonction.c  ****     if (output_data_rate == DATA_RATE_25_Hz) delay =  40000;
+  87:.\fonction.c  ****     if (output_data_rate == DATA_RATE_50_Hz) delay =  20000;
+  88:.\fonction.c  ****     if (output_data_rate == DATA_RATE_100_Hz) delay = 10000;
+  89:.\fonction.c  ****     if (output_data_rate == DATA_RATE_200_Hz) delay =  5000;
+  90:.\fonction.c  ****     if (output_data_rate == DATA_RATE_400_Hz) delay =  2500;
+  91:.\fonction.c  ****     
+  92:.\fonction.c  ****     Accelero_Start();
+  93:.\fonction.c  ****   
+  94:.\fonction.c  ****     uint8 i = 0 ;
+  95:.\fonction.c  ****     
+  96:.\fonction.c  ****     int16 acc_x = 0 ;
+  97:.\fonction.c  ****     int16 acc_y = 0 ;
+  98:.\fonction.c  ****     int16 acc_z = 0 ;
+  99:.\fonction.c  ****     
+ 100:.\fonction.c  ****     uint32 sum_square_acc_x = 0;
+ 101:.\fonction.c  ****     uint32 sum_square_acc_y = 0;
+ 102:.\fonction.c  ****     uint32 sum_square_acc_z = 0;
+ 103:.\fonction.c  ****     
+ 104:.\fonction.c  ****     uint8    buff[6] = {0};
+ 105:.\fonction.c  **** 
+ 106:.\fonction.c  ****     //permet de commencer la mesure
+ 107:.\fonction.c  ****     //le retire de son standby mode
+ 108:.\fonction.c  ****     accelero_write(POWER_CONTROL_ADDR, MESURE_MODE);
+ 109:.\fonction.c  ****     CyDelay(40); // datasheet : wakeup time 1.1 ms + 1/(data_rate)
+ 110:.\fonction.c  ****     
+ 111:.\fonction.c  ****     //on fait nb_acquisition fois :
+ 112:.\fonction.c  ****     for ( i = 0 ; i < nb_acquisition ; i++ ) {
+ 113:.\fonction.c  ****         
+ 114:.\fonction.c  ****         // on écrit à l'accéléromètre l'adresse de la première donnée à lire
+ 115:.\fonction.c  ****         uint8 wr_data[1] = {DATA_X_LSB_ADDR};
+ 116:.\fonction.c  ****         Accelero_I2CMasterWriteBuf(ACCELERO_ADDR,wr_data,1,Accelero_I2C_MODE_COMPLETE_XFER);
+ 117:.\fonction.c  ****     
+ 118:.\fonction.c  ****         uint8 x; 
+ 119:.\fonction.c  ****         do {
+ 120:.\fonction.c  ****             //on récupère en un envoi, les 6 octets de données (ax_low, ax_high, ay_low, ay_high
+ 121:.\fonction.c  ****             x = Accelero_I2CMasterReadBuf(ACCELERO_ADDR,buff,6,Accelero_I2C_MODE_COMPLETE_XFER); 
+ 122:.\fonction.c  ****         }
+ 123:.\fonction.c  ****         while (x != Accelero_I2C_MSTR_NO_ERROR); // car écriture envoie une erreur si le write n'e
+ 124:.\fonction.c  ****    
+ 125:.\fonction.c  ****         //wait for data transfer to complete 
+ 126:.\fonction.c  ****         while (!(Accelero_I2CMasterStatus() & Accelero_I2C_MSTAT_RD_CMPLT));
+ 127:.\fonction.c  ****         
+ 128:.\fonction.c  ****         acc_x = (int16) buff[0] | ((int8)buff[1]<<8);
+ 129:.\fonction.c  ****         acc_y = (int16) buff[2] | ((int8)buff[3]<<8);
+ 130:.\fonction.c  ****         acc_z = (int16) buff[4] | ((int8)buff[5]<<8);
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 5
+
+
+ 131:.\fonction.c  ****     
+ 132:.\fonction.c  ****         sum_square_acc_x += acc_x * acc_x;
+ 133:.\fonction.c  ****         sum_square_acc_y += acc_y * acc_y;
+ 134:.\fonction.c  ****         sum_square_acc_z += acc_z * acc_z;
+ 135:.\fonction.c  ****         
+ 136:.\fonction.c  ****         CyDelayUs(delay); //fonction en microsecondes
+ 137:.\fonction.c  ****         
+ 138:.\fonction.c  ****     }
+ 139:.\fonction.c  ****     
+ 140:.\fonction.c  ****     //remet l'accéléro en standby mode
+ 141:.\fonction.c  ****     accelero_write(POWER_CONTROL_ADDR, STANDBY_MODE);
+ 142:.\fonction.c  ****     Accelero_Stop();
+ 143:.\fonction.c  ****     
+ 144:.\fonction.c  ****     *a_x = (uint16) sqrt(sum_square_acc_x/nb_acquisition);
+ 145:.\fonction.c  ****     *a_y = (uint16) sqrt(sum_square_acc_y/nb_acquisition);
+ 146:.\fonction.c  ****     *a_z = (uint16) sqrt(sum_square_acc_z/nb_acquisition);
+ 147:.\fonction.c  ****     
+ 148:.\fonction.c  **** }
+ 149:.\fonction.c  **** 
+ 150:.\fonction.c  **** uint16 accelero_calcul_norme_acc_efficace(uint16 a_x, uint16 a_y, uint16 a_z){
+  99              		.loc 1 150 0
+ 100              		.cfi_startproc
+ 101              	.LVL11:
+ 102 0000 10B5     		push	{r4, lr}
+ 103              		.cfi_def_cfa_offset 8
+ 104              		.cfi_offset 4, -8
+ 105              		.cfi_offset 14, -4
+ 151:.\fonction.c  **** 
+ 152:.\fonction.c  ****     return sqrt( a_x * a_x + a_y * a_y + a_z * a_z );
+ 106              		.loc 1 152 0
+ 107 0002 4043     		mul	r0, r0
+ 108              	.LVL12:
+ 109 0004 4943     		mul	r1, r1
+ 110              	.LVL13:
+ 111 0006 4418     		add	r4, r0, r1
+ 112 0008 5243     		mul	r2, r2
+ 113              	.LVL14:
+ 114 000a A418     		add	r4, r4, r2
+ 115 000c 201C     		mov	r0, r4
+ 116 000e FFF7FEFF 		bl	__aeabi_i2d
+ 117              	.LVL15:
+ 118 0012 FFF7FEFF 		bl	sqrt
+ 119              	.LVL16:
+ 120 0016 FFF7FEFF 		bl	__aeabi_d2uiz
+ 121              	.LVL17:
+ 122 001a 80B2     		uxth	r0, r0
+ 153:.\fonction.c  **** 
+ 154:.\fonction.c  **** }
+ 123              		.loc 1 154 0
+ 124              		@ sp needed
+ 125 001c 10BD     		pop	{r4, pc}
+ 126              		.cfi_endproc
+ 127              	.LFE36:
+ 128              		.size	accelero_calcul_norme_acc_efficace, .-accelero_calcul_norme_acc_efficace
+ 129 001e C046     		.section	.text.accelero_transmission,"ax",%progbits
+ 130              		.align	2
+ 131              		.global	accelero_transmission
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 6
+
+
+ 132              		.code	16
+ 133              		.thumb_func
+ 134              		.type	accelero_transmission, %function
+ 135              	accelero_transmission:
+ 136              	.LFB37:
+ 155:.\fonction.c  **** 
+ 156:.\fonction.c  **** void accelero_transmission(uint16 a_x, uint16 a_y, uint16 a_z, uint16 a_globale){
+ 137              		.loc 1 156 0
+ 138              		.cfi_startproc
+ 139              	.LVL18:
+ 140 0000 30B5     		push	{r4, r5, lr}
+ 141              		.cfi_def_cfa_offset 12
+ 142              		.cfi_offset 4, -12
+ 143              		.cfi_offset 5, -8
+ 144              		.cfi_offset 14, -4
+ 145 0002 83B0     		sub	sp, sp, #12
+ 146              		.cfi_def_cfa_offset 24
+ 157:.\fonction.c  ****     
+ 158:.\fonction.c  ****     /*PC_Start();
+ 159:.\fonction.c  ****     char str[15] = {'\0'};
+ 160:.\fonction.c  ****     
+ 161:.\fonction.c  ****     PC_UartPutString("debut\n\r\n\r");
+ 162:.\fonction.c  ****     
+ 163:.\fonction.c  ****     sprintf(str, "acc_x : %d\n\r", a_x);
+ 164:.\fonction.c  ****     PC_UartPutString(str);
+ 165:.\fonction.c  ****     
+ 166:.\fonction.c  ****     sprintf(str, "acc_y : %d\n\r", a_y);
+ 167:.\fonction.c  ****     PC_UartPutString(str);
+ 168:.\fonction.c  ****     
+ 169:.\fonction.c  ****     sprintf(str, "acc_z : %d\n\r", a_z);
+ 170:.\fonction.c  ****     PC_UartPutString(str);
+ 171:.\fonction.c  ****     
+ 172:.\fonction.c  ****     sprintf(str, "acc_tot : %d\n\r\n\r", a_globale);
+ 173:.\fonction.c  ****     PC_UartPutString(str);
+ 174:.\fonction.c  ****     CyDelay(10);
+ 175:.\fonction.c  ****     PC_Sleep();*/
+ 176:.\fonction.c  ****     
+ 177:.\fonction.c  ****     uint8 data[6] = {0};
+ 178:.\fonction.c  ****     data[0] = (uint8)( ((a_x >>7) & 0x3F) + FLAG_TRANSMISSION_X);
+ 147              		.loc 1 178 0
+ 148 0004 C409     		lsr	r4, r0, #7
+ 149 0006 3F25     		mov	r5, #63
+ 150 0008 2C40     		and	r4, r5
+ 151 000a 403C     		sub	r4, r4, #64
+ 152 000c 6B46     		mov	r3, sp
+ 153              	.LVL19:
+ 154 000e 1C70     		strb	r4, [r3]
+ 179:.\fonction.c  ****     data[1] = a_x & 0x7F ;
+ 155              		.loc 1 179 0
+ 156 0010 7F24     		mov	r4, #127
+ 157 0012 2040     		and	r0, r4
+ 158              	.LVL20:
+ 159 0014 5870     		strb	r0, [r3, #1]
+ 180:.\fonction.c  ****     data[2] = (uint8)( ((a_y >>7) & 0x3F) + FLAG_TRANSMISSION_Y_Z);
+ 160              		.loc 1 180 0
+ 161 0016 C809     		lsr	r0, r1, #7
+ 162 0018 2840     		and	r0, r5
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 7
+
+
+ 163 001a 8038     		sub	r0, r0, #128
+ 164 001c 9870     		strb	r0, [r3, #2]
+ 181:.\fonction.c  ****     data[3] = a_y &  0x7F ;
+ 165              		.loc 1 181 0
+ 166 001e 2140     		and	r1, r4
+ 167              	.LVL21:
+ 168 0020 D970     		strb	r1, [r3, #3]
+ 182:.\fonction.c  ****     data[4] = (uint8)( ((a_z >>7) & 0x3F) + FLAG_TRANSMISSION_Y_Z);
+ 169              		.loc 1 182 0
+ 170 0022 D309     		lsr	r3, r2, #7
+ 171 0024 2B40     		and	r3, r5
+ 172 0026 803B     		sub	r3, r3, #128
+ 173 0028 6946     		mov	r1, sp
+ 174 002a 0B71     		strb	r3, [r1, #4]
+ 183:.\fonction.c  ****     data[5] = a_z & 0x7F;
+ 175              		.loc 1 183 0
+ 176 002c 2240     		and	r2, r4
+ 177              	.LVL22:
+ 178 002e 4A71     		strb	r2, [r1, #5]
+ 184:.\fonction.c  ****     
+ 185:.\fonction.c  ****     Pin_gestion_sleep_xbee_SetDriveMode(Pin_gestion_sleep_xbee_DM_STRONG);         
+ 179              		.loc 1 185 0
+ 180 0030 0620     		mov	r0, #6
+ 181 0032 FFF7FEFF 		bl	Pin_gestion_sleep_xbee_SetDriveMode
+ 182              	.LVL23:
+ 186:.\fonction.c  ****     Pin_gestion_sleep_xbee_Write(0u);
+ 183              		.loc 1 186 0
+ 184 0036 0020     		mov	r0, #0
+ 185 0038 FFF7FEFF 		bl	Pin_gestion_sleep_xbee_Write
+ 186              	.LVL24:
+ 187:.\fonction.c  ****     CyDelay(10); // temps de réveil du xbee
+ 187              		.loc 1 187 0
+ 188 003c 0A20     		mov	r0, #10
+ 189 003e FFF7FEFF 		bl	CyDelay
+ 190              	.LVL25:
+ 188:.\fonction.c  ****     
+ 189:.\fonction.c  ****     Pin_tx_SetDriveMode(Pin_tx_DM_STRONG);
+ 191              		.loc 1 189 0
+ 192 0042 0620     		mov	r0, #6
+ 193 0044 FFF7FEFF 		bl	Pin_tx_SetDriveMode
+ 194              	.LVL26:
+ 190:.\fonction.c  ****     zigbee_Start();
+ 195              		.loc 1 190 0
+ 196 0048 FFF7FEFF 		bl	zigbee_Start
+ 197              	.LVL27:
+ 191:.\fonction.c  ****     
+ 192:.\fonction.c  ****     zigbee_PutArray(data,6);
+ 198              		.loc 1 192 0
+ 199 004c 6846     		mov	r0, sp
+ 200 004e 0621     		mov	r1, #6
+ 201 0050 FFF7FEFF 		bl	zigbee_PutArray
+ 202              	.LVL28:
+ 193:.\fonction.c  ****     CyDelay(50); // delay car il supprime la fin des données, à tester plus court
+ 203              		.loc 1 193 0
+ 204 0054 3220     		mov	r0, #50
+ 205 0056 FFF7FEFF 		bl	CyDelay
+ 206              	.LVL29:
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 8
+
+
+ 207              	.L6:
+ 194:.\fonction.c  ****     while ( !(zigbee_GetTxBufferSize()==0));
+ 208              		.loc 1 194 0 discriminator 1
+ 209 005a FFF7FEFF 		bl	zigbee_GetTxBufferSize
+ 210              	.LVL30:
+ 211 005e 0028     		cmp	r0, #0
+ 212 0060 FBD1     		bne	.L6
+ 195:.\fonction.c  ****     
+ 196:.\fonction.c  ****     zigbee_Sleep();
+ 213              		.loc 1 196 0
+ 214 0062 FFF7FEFF 		bl	zigbee_Sleep
+ 215              	.LVL31:
+ 197:.\fonction.c  ****     CyDelay(5);
+ 216              		.loc 1 197 0
+ 217 0066 0520     		mov	r0, #5
+ 218 0068 FFF7FEFF 		bl	CyDelay
+ 219              	.LVL32:
+ 198:.\fonction.c  ****     
+ 199:.\fonction.c  ****     Pin_tx_SetDriveMode(Pin_tx_DM_DIG_HIZ);
+ 220              		.loc 1 199 0
+ 221 006c 0120     		mov	r0, #1
+ 222 006e FFF7FEFF 		bl	Pin_tx_SetDriveMode
+ 223              	.LVL33:
+ 200:.\fonction.c  ****     Pin_gestion_sleep_xbee_SetDriveMode(Pin_gestion_sleep_xbee_DM_DIG_HIZ);
+ 224              		.loc 1 200 0
+ 225 0072 0120     		mov	r0, #1
+ 226 0074 FFF7FEFF 		bl	Pin_gestion_sleep_xbee_SetDriveMode
+ 227              	.LVL34:
+ 201:.\fonction.c  ****     Pin_gestion_sleep_xbee_Write(1u);
+ 228              		.loc 1 201 0
+ 229 0078 0120     		mov	r0, #1
+ 230 007a FFF7FEFF 		bl	Pin_gestion_sleep_xbee_Write
+ 231              	.LVL35:
+ 202:.\fonction.c  ****     
+ 203:.\fonction.c  **** }
+ 232              		.loc 1 203 0
+ 233 007e 03B0     		add	sp, sp, #12
+ 234              		@ sp needed
+ 235 0080 30BD     		pop	{r4, r5, pc}
+ 236              		.cfi_endproc
+ 237              	.LFE37:
+ 238              		.size	accelero_transmission, .-accelero_transmission
+ 239 0082 C046     		.section	.text.accelero_read,"ax",%progbits
+ 240              		.align	2
+ 241              		.global	accelero_read
+ 242              		.code	16
+ 243              		.thumb_func
+ 244              		.type	accelero_read, %function
+ 245              	accelero_read:
+ 246              	.LFB38:
+ 204:.\fonction.c  **** 
+ 205:.\fonction.c  **** /*
+ 206:.\fonction.c  **** void accelero_transmission_une_voie(uint16 a, int16 flag){
+ 207:.\fonction.c  ****     
+ 208:.\fonction.c  ****     int8 a_LSB = 0 ;
+ 209:.\fonction.c  ****     int8 a_MSB = 0 ;
+ 210:.\fonction.c  ****     
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 9
+
+
+ 211:.\fonction.c  ****     // Pour la transmission le bit de poids le plus fort de a_LSB est un zéro 
+ 212:.\fonction.c  ****     // Les 7 autres bits sont de la donnée
+ 213:.\fonction.c  ****     a_LSB = (int8)(a & 0x7F); 
+ 214:.\fonction.c  ****     
+ 215:.\fonction.c  ****     // les deux bits de poids le plus fort de a_MSB sont un 11 pour a_x et 10 pour a_y et a_z
+ 216:.\fonction.c  ****     // les 6 autres bits sont de la donnée
+ 217:.\fonction.c  ****     a_MSB = (int8)( (a>>7) & 0x3F);
+ 218:.\fonction.c  ****     a_MSB+= flag;
+ 219:.\fonction.c  ****     
+ 220:.\fonction.c  ****     
+ 221:.\fonction.c  ****     XBee_UartPutChar(a_MSB);
+ 222:.\fonction.c  ****     XBee_UartPutChar(a_LSB);
+ 223:.\fonction.c  ****     
+ 224:.\fonction.c  ****     //on attend d'être sur d'avoir tout transmis.
+ 225:.\fonction.c  ****     while ( !(XBee_SpiUartGetTxBufferSize()==0));
+ 226:.\fonction.c  ****     
+ 227:.\fonction.c  **** }*/
+ 228:.\fonction.c  **** 
+ 229:.\fonction.c  **** 
+ 230:.\fonction.c  **** 
+ 231:.\fonction.c  **** uint8 accelero_read(uint8 register_adress){
+ 247              		.loc 1 231 0
+ 248              		.cfi_startproc
+ 249              	.LVL36:
+ 250 0000 00B5     		push	{lr}
+ 251              		.cfi_def_cfa_offset 4
+ 252              		.cfi_offset 14, -4
+ 253 0002 83B0     		sub	sp, sp, #12
+ 254              		.cfi_def_cfa_offset 16
+ 232:.\fonction.c  **** 
+ 233:.\fonction.c  ****     uint8 x;
+ 234:.\fonction.c  ****     uint8 rd_data = 123;
+ 255              		.loc 1 234 0
+ 256 0004 7B22     		mov	r2, #123
+ 257 0006 6B46     		mov	r3, sp
+ 258 0008 DA71     		strb	r2, [r3, #7]
+ 259              	.LBB2:
+ 235:.\fonction.c  ****     
+ 236:.\fonction.c  ****     do {
+ 237:.\fonction.c  ****         uint8 wr_data[1] = {register_adress};
+ 260              		.loc 1 237 0
+ 261 000a 01A9     		add	r1, sp, #4
+ 262 000c 0870     		strb	r0, [r1]
+ 238:.\fonction.c  ****         x = Accelero_I2CMasterWriteBuf(ACCELERO_ADDR,wr_data,1,Accelero_I2C_MODE_COMPLETE_XFER);
+ 263              		.loc 1 238 0
+ 264 000e 1D20     		mov	r0, #29
+ 265              	.LVL37:
+ 266 0010 7A3A     		sub	r2, r2, #122
+ 267 0012 0023     		mov	r3, #0
+ 268 0014 FFF7FEFF 		bl	Accelero_I2CMasterWriteBuf
+ 269              	.LVL38:
+ 270              	.L8:
+ 271              	.LBE2:
+ 239:.\fonction.c  ****     }
+ 240:.\fonction.c  ****     while (0); //x != Accelero_I2C_MSTR_NO_ERROR
+ 241:.\fonction.c  ****     
+ 242:.\fonction.c  ****     do {
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 10
+
+
+ 243:.\fonction.c  ****         x = Accelero_I2CMasterReadBuf(ACCELERO_ADDR,&rd_data,1,Accelero_I2C_MODE_COMPLETE_XFER); 
+ 272              		.loc 1 243 0 discriminator 1
+ 273 0018 1D20     		mov	r0, #29
+ 274 001a 6B46     		mov	r3, sp
+ 275 001c D91D     		add	r1, r3, #7
+ 276 001e 0122     		mov	r2, #1
+ 277 0020 0023     		mov	r3, #0
+ 278 0022 FFF7FEFF 		bl	Accelero_I2CMasterReadBuf
+ 279              	.LVL39:
+ 280 0026 C0B2     		uxtb	r0, r0
+ 281              	.LVL40:
+ 244:.\fonction.c  ****     }
+ 245:.\fonction.c  ****     while (x != Accelero_I2C_MSTR_NO_ERROR); // car écriture envoie une erreur si le write n'est p
+ 282              		.loc 1 245 0 discriminator 1
+ 283 0028 0028     		cmp	r0, #0
+ 284 002a F5D1     		bne	.L8
+ 285              	.LVL41:
+ 286              	.L9:
+ 246:.\fonction.c  ****     
+ 247:.\fonction.c  ****    
+ 248:.\fonction.c  ****     //wait for data transfer to complete 
+ 249:.\fonction.c  ****     while (!(Accelero_I2CMasterStatus() & Accelero_I2C_MSTAT_RD_CMPLT));
+ 287              		.loc 1 249 0 discriminator 1
+ 288 002c FFF7FEFF 		bl	Accelero_I2CMasterStatus
+ 289              	.LVL42:
+ 290 0030 C307     		lsl	r3, r0, #31
+ 291 0032 FBD5     		bpl	.L9
+ 250:.\fonction.c  ****     
+ 251:.\fonction.c  ****     return rd_data;
+ 292              		.loc 1 251 0
+ 293 0034 6B46     		mov	r3, sp
+ 294 0036 D879     		ldrb	r0, [r3, #7]
+ 252:.\fonction.c  **** }
+ 295              		.loc 1 252 0
+ 296 0038 03B0     		add	sp, sp, #12
+ 297              		@ sp needed
+ 298 003a 00BD     		pop	{pc}
+ 299              		.cfi_endproc
+ 300              	.LFE38:
+ 301              		.size	accelero_read, .-accelero_read
+ 302              		.section	.text.accelero_write,"ax",%progbits
+ 303              		.align	2
+ 304              		.global	accelero_write
+ 305              		.code	16
+ 306              		.thumb_func
+ 307              		.type	accelero_write, %function
+ 308              	accelero_write:
+ 309              	.LFB39:
+ 253:.\fonction.c  **** 
+ 254:.\fonction.c  **** void accelero_write( uint8 register_adress, uint8 wr_data){
+ 310              		.loc 1 254 0
+ 311              		.cfi_startproc
+ 312              	.LVL43:
+ 313 0000 00B5     		push	{lr}
+ 314              		.cfi_def_cfa_offset 4
+ 315              		.cfi_offset 14, -4
+ 316 0002 83B0     		sub	sp, sp, #12
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 11
+
+
+ 317              		.cfi_def_cfa_offset 16
+ 255:.\fonction.c  ****     
+ 256:.\fonction.c  ****     uint8  buffer[2];
+ 257:.\fonction.c  **** 
+ 258:.\fonction.c  ****     /* Initialize buffer with packet */
+ 259:.\fonction.c  ****     buffer[0] = register_adress;
+ 318              		.loc 1 259 0
+ 319 0004 01AB     		add	r3, sp, #4
+ 320 0006 1870     		strb	r0, [r3]
+ 260:.\fonction.c  ****     buffer[1] = wr_data;
+ 321              		.loc 1 260 0
+ 322 0008 5970     		strb	r1, [r3, #1]
+ 261:.\fonction.c  ****   
+ 262:.\fonction.c  ****     Accelero_I2CMasterWriteBuf(ACCELERO_ADDR, buffer, 2 ,Accelero_I2C_MODE_COMPLETE_XFER);
+ 323              		.loc 1 262 0
+ 324 000a 1D20     		mov	r0, #29
+ 325              	.LVL44:
+ 326 000c 191C     		mov	r1, r3
+ 327              	.LVL45:
+ 328 000e 0222     		mov	r2, #2
+ 329 0010 0023     		mov	r3, #0
+ 330              	.LVL46:
+ 331 0012 FFF7FEFF 		bl	Accelero_I2CMasterWriteBuf
+ 332              	.LVL47:
+ 333              	.L11:
+ 263:.\fonction.c  **** 
+ 264:.\fonction.c  ****     /* Waits until master completes write transfer */
+ 265:.\fonction.c  ****     while (0u == (Accelero_I2CMasterStatus() & Accelero_I2C_MSTAT_WR_CMPLT));  
+ 334              		.loc 1 265 0 discriminator 1
+ 335 0016 FFF7FEFF 		bl	Accelero_I2CMasterStatus
+ 336              	.LVL48:
+ 337 001a 8307     		lsl	r3, r0, #30
+ 338 001c FBD5     		bpl	.L11
+ 266:.\fonction.c  **** 
+ 267:.\fonction.c  **** }
+ 339              		.loc 1 267 0
+ 340 001e 03B0     		add	sp, sp, #12
+ 341              		@ sp needed
+ 342 0020 00BD     		pop	{pc}
+ 343              		.cfi_endproc
+ 344              	.LFE39:
+ 345              		.size	accelero_write, .-accelero_write
+ 346 0022 C046     		.section	.text.accelero_init,"ax",%progbits
+ 347              		.align	2
+ 348              		.global	accelero_init
+ 349              		.code	16
+ 350              		.thumb_func
+ 351              		.type	accelero_init, %function
+ 352              	accelero_init:
+ 353              	.LFB33:
+  39:.\fonction.c  ****     
+ 354              		.loc 1 39 0
+ 355              		.cfi_startproc
+ 356              	.LVL49:
+ 357 0000 70B5     		push	{r4, r5, r6, lr}
+ 358              		.cfi_def_cfa_offset 16
+ 359              		.cfi_offset 4, -16
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 12
+
+
+ 360              		.cfi_offset 5, -12
+ 361              		.cfi_offset 6, -8
+ 362              		.cfi_offset 14, -4
+ 363 0002 061C     		mov	r6, r0
+ 364 0004 0C1C     		mov	r4, r1
+ 365 0006 151C     		mov	r5, r2
+  41:.\fonction.c  ****     // écrit la range et la resolution
+ 366              		.loc 1 41 0
+ 367 0008 FFF7FEFF 		bl	Accelero_Start
+ 368              	.LVL50:
+  43:.\fonction.c  ****     
+ 369              		.loc 1 43 0
+ 370 000c 3443     		orr	r4, r6
+ 371              	.LVL51:
+ 372 000e E1B2     		uxtb	r1, r4
+ 373 0010 3120     		mov	r0, #49
+ 374 0012 FFF7FEFF 		bl	accelero_write
+ 375              	.LVL52:
+  46:.\fonction.c  ****     
+ 376              		.loc 1 46 0
+ 377 0016 1021     		mov	r1, #16
+ 378 0018 2A1C     		mov	r2, r5
+ 379 001a 0A43     		orr	r2, r1
+ 380 001c D1B2     		uxtb	r1, r2
+ 381 001e 2C20     		mov	r0, #44
+ 382 0020 FFF7FEFF 		bl	accelero_write
+ 383              	.LVL53:
+  48:.\fonction.c  **** }
+ 384              		.loc 1 48 0
+ 385 0024 FFF7FEFF 		bl	Accelero_Stop
+ 386              	.LVL54:
+  49:.\fonction.c  **** 
+ 387              		.loc 1 49 0
+ 388              		@ sp needed
+ 389              	.LVL55:
+ 390              	.LVL56:
+ 391 0028 70BD     		pop	{r4, r5, r6, pc}
+ 392              		.cfi_endproc
+ 393              	.LFE33:
+ 394              		.size	accelero_init, .-accelero_init
+ 395              		.global	__aeabi_uidiv
+ 396              		.global	__aeabi_ui2d
+ 397 002a C046     		.section	.text.accelero_acquisition_efficace,"ax",%progbits
+ 398              		.align	2
+ 399              		.global	accelero_acquisition_efficace
+ 400              		.code	16
+ 401              		.thumb_func
+ 402              		.type	accelero_acquisition_efficace, %function
+ 403              	accelero_acquisition_efficace:
+ 404              	.LFB35:
+  82:.\fonction.c  ****     
+ 405              		.loc 1 82 0
+ 406              		.cfi_startproc
+ 407              	.LVL57:
+ 408 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 409              		.cfi_def_cfa_offset 20
+ 410              		.cfi_offset 4, -20
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 13
+
+
+ 411              		.cfi_offset 5, -16
+ 412              		.cfi_offset 6, -12
+ 413              		.cfi_offset 7, -8
+ 414              		.cfi_offset 14, -4
+ 415 0002 5F46     		mov	r7, fp
+ 416 0004 5646     		mov	r6, r10
+ 417 0006 4D46     		mov	r5, r9
+ 418 0008 4446     		mov	r4, r8
+ 419 000a F0B4     		push	{r4, r5, r6, r7}
+ 420              		.cfi_def_cfa_offset 36
+ 421              		.cfi_offset 8, -36
+ 422              		.cfi_offset 9, -32
+ 423              		.cfi_offset 10, -28
+ 424              		.cfi_offset 11, -24
+ 425 000c 89B0     		sub	sp, sp, #36
+ 426              		.cfi_def_cfa_offset 72
+ 427 000e 8046     		mov	r8, r0
+ 428 0010 0291     		str	r1, [sp, #8]
+ 429 0012 0392     		str	r2, [sp, #12]
+ 430 0014 9946     		mov	r9, r3
+ 431 0016 12AB     		add	r3, sp, #72
+ 432              	.LVL58:
+ 433 0018 1B88     		ldrh	r3, [r3]
+ 434              	.LVL59:
+  86:.\fonction.c  ****     if (output_data_rate == DATA_RATE_50_Hz) delay =  20000;
+ 435              		.loc 1 86 0
+ 436 001a 082B     		cmp	r3, #8
+ 437 001c 02D0     		beq	.L23
+  84:.\fonction.c  ****     
+ 438              		.loc 1 84 0
+ 439 001e 0022     		mov	r2, #0
+ 440              	.LVL60:
+ 441 0020 0192     		str	r2, [sp, #4]
+ 442 0022 01E0     		b	.L14
+ 443              	.LVL61:
+ 444              	.L23:
+  86:.\fonction.c  ****     if (output_data_rate == DATA_RATE_50_Hz) delay =  20000;
+ 445              		.loc 1 86 0
+ 446 0024 494A     		ldr	r2, .L28
+ 447              	.LVL62:
+ 448 0026 0192     		str	r2, [sp, #4]
+ 449              	.L14:
+ 450              	.LVL63:
+  87:.\fonction.c  ****     if (output_data_rate == DATA_RATE_100_Hz) delay = 10000;
+ 451              		.loc 1 87 0
+ 452 0028 092B     		cmp	r3, #9
+ 453 002a 01D1     		bne	.L15
+ 454 002c 484A     		ldr	r2, .L28+4
+ 455 002e 0192     		str	r2, [sp, #4]
+ 456              	.LVL64:
+ 457              	.L15:
+  88:.\fonction.c  ****     if (output_data_rate == DATA_RATE_200_Hz) delay =  5000;
+ 458              		.loc 1 88 0
+ 459 0030 0A2B     		cmp	r3, #10
+ 460 0032 01D1     		bne	.L16
+ 461 0034 474A     		ldr	r2, .L28+8
+ 462 0036 0192     		str	r2, [sp, #4]
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 14
+
+
+ 463              	.LVL65:
+ 464              	.L16:
+  89:.\fonction.c  ****     if (output_data_rate == DATA_RATE_400_Hz) delay =  2500;
+ 465              		.loc 1 89 0
+ 466 0038 0B2B     		cmp	r3, #11
+ 467 003a 01D1     		bne	.L17
+ 468 003c 464A     		ldr	r2, .L28+12
+ 469 003e 0192     		str	r2, [sp, #4]
+ 470              	.LVL66:
+ 471              	.L17:
+  90:.\fonction.c  ****     
+ 472              		.loc 1 90 0
+ 473 0040 0C2B     		cmp	r3, #12
+ 474 0042 01D1     		bne	.L18
+ 475 0044 454B     		ldr	r3, .L28+16
+ 476 0046 0193     		str	r3, [sp, #4]
+ 477              	.LVL67:
+ 478              	.L18:
+  92:.\fonction.c  ****   
+ 479              		.loc 1 92 0
+ 480 0048 FFF7FEFF 		bl	Accelero_Start
+ 481              	.LVL68:
+ 104:.\fonction.c  **** 
+ 482              		.loc 1 104 0
+ 483 004c 0023     		mov	r3, #0
+ 484 004e 0693     		str	r3, [sp, #24]
+ 485 0050 06AA     		add	r2, sp, #24
+ 486 0052 9380     		strh	r3, [r2, #4]
+ 108:.\fonction.c  ****     CyDelay(40); // datasheet : wakeup time 1.1 ms + 1/(data_rate)
+ 487              		.loc 1 108 0
+ 488 0054 2D20     		mov	r0, #45
+ 489 0056 0821     		mov	r1, #8
+ 490 0058 FFF7FEFF 		bl	accelero_write
+ 491              	.LVL69:
+ 109:.\fonction.c  ****     
+ 492              		.loc 1 109 0
+ 493 005c 2820     		mov	r0, #40
+ 494 005e FFF7FEFF 		bl	CyDelay
+ 495              	.LVL70:
+ 102:.\fonction.c  ****     
+ 496              		.loc 1 102 0
+ 497 0062 0024     		mov	r4, #0
+ 101:.\fonction.c  ****     uint32 sum_square_acc_z = 0;
+ 498              		.loc 1 101 0
+ 499 0064 0025     		mov	r5, #0
+ 100:.\fonction.c  ****     uint32 sum_square_acc_y = 0;
+ 500              		.loc 1 100 0
+ 501 0066 0026     		mov	r6, #0
+ 112:.\fonction.c  ****         
+ 502              		.loc 1 112 0
+ 503 0068 0027     		mov	r7, #0
+ 504 006a 35E0     		b	.L19
+ 505              	.LVL71:
+ 506              	.L22:
+ 507              	.LBB3:
+ 115:.\fonction.c  ****         Accelero_I2CMasterWriteBuf(ACCELERO_ADDR,wr_data,1,Accelero_I2C_MODE_COMPLETE_XFER);
+ 508              		.loc 1 115 0
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 15
+
+
+ 509 006c 05A9     		add	r1, sp, #20
+ 510 006e 3223     		mov	r3, #50
+ 511 0070 0B70     		strb	r3, [r1]
+ 116:.\fonction.c  ****     
+ 512              		.loc 1 116 0
+ 513 0072 1D20     		mov	r0, #29
+ 514 0074 0122     		mov	r2, #1
+ 515 0076 0023     		mov	r3, #0
+ 516 0078 FFF7FEFF 		bl	Accelero_I2CMasterWriteBuf
+ 517              	.LVL72:
+ 518              	.L20:
+ 121:.\fonction.c  ****         }
+ 519              		.loc 1 121 0 discriminator 1
+ 520 007c 1D20     		mov	r0, #29
+ 521 007e 06A9     		add	r1, sp, #24
+ 522 0080 0622     		mov	r2, #6
+ 523 0082 0023     		mov	r3, #0
+ 524 0084 FFF7FEFF 		bl	Accelero_I2CMasterReadBuf
+ 525              	.LVL73:
+ 526 0088 C0B2     		uxtb	r0, r0
+ 527              	.LVL74:
+ 123:.\fonction.c  ****    
+ 528              		.loc 1 123 0 discriminator 1
+ 529 008a 0028     		cmp	r0, #0
+ 530 008c F6D1     		bne	.L20
+ 531              	.LVL75:
+ 532              	.L21:
+ 126:.\fonction.c  ****         
+ 533              		.loc 1 126 0 discriminator 1
+ 534 008e FFF7FEFF 		bl	Accelero_I2CMasterStatus
+ 535              	.LVL76:
+ 536 0092 C307     		lsl	r3, r0, #31
+ 537 0094 FBD5     		bpl	.L21
+ 128:.\fonction.c  ****         acc_y = (int16) buff[2] | ((int8)buff[3]<<8);
+ 538              		.loc 1 128 0 discriminator 2
+ 539 0096 06AA     		add	r2, sp, #24
+ 540 0098 1378     		ldrb	r3, [r2]
+ 541 009a 9A46     		mov	r10, r3
+ 542 009c 0120     		mov	r0, #1
+ 543 009e 1056     		ldrsb	r0, [r2, r0]
+ 544 00a0 0002     		lsl	r0, r0, #8
+ 545              	.LVL77:
+ 129:.\fonction.c  ****         acc_z = (int16) buff[4] | ((int8)buff[5]<<8);
+ 546              		.loc 1 129 0 discriminator 2
+ 547 00a2 9378     		ldrb	r3, [r2, #2]
+ 548              	.LVL78:
+ 549 00a4 9C46     		mov	ip, r3
+ 550 00a6 0321     		mov	r1, #3
+ 551 00a8 5156     		ldrsb	r1, [r2, r1]
+ 552 00aa 0902     		lsl	r1, r1, #8
+ 553              	.LVL79:
+ 130:.\fonction.c  ****     
+ 554              		.loc 1 130 0 discriminator 2
+ 555 00ac 1379     		ldrb	r3, [r2, #4]
+ 556              	.LVL80:
+ 557 00ae 9B46     		mov	fp, r3
+ 558 00b0 5279     		ldrb	r2, [r2, #5]
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 16
+
+
+ 559 00b2 52B2     		sxtb	r2, r2
+ 560 00b4 1202     		lsl	r2, r2, #8
+ 561              	.LVL81:
+ 132:.\fonction.c  ****         sum_square_acc_y += acc_y * acc_y;
+ 562              		.loc 1 132 0 discriminator 2
+ 563 00b6 5346     		mov	r3, r10
+ 564              	.LVL82:
+ 565 00b8 1843     		orr	r0, r3
+ 566              	.LVL83:
+ 567 00ba 4043     		mul	r0, r0
+ 568 00bc 3618     		add	r6, r6, r0
+ 569              	.LVL84:
+ 133:.\fonction.c  ****         sum_square_acc_z += acc_z * acc_z;
+ 570              		.loc 1 133 0 discriminator 2
+ 571 00be 6346     		mov	r3, ip
+ 572 00c0 1943     		orr	r1, r3
+ 573              	.LVL85:
+ 574 00c2 4943     		mul	r1, r1
+ 575 00c4 6D18     		add	r5, r5, r1
+ 576              	.LVL86:
+ 134:.\fonction.c  ****         
+ 577              		.loc 1 134 0 discriminator 2
+ 578 00c6 5B46     		mov	r3, fp
+ 579 00c8 1343     		orr	r3, r2
+ 580 00ca 5B43     		mul	r3, r3
+ 581 00cc E418     		add	r4, r4, r3
+ 582              	.LVL87:
+ 136:.\fonction.c  ****         
+ 583              		.loc 1 136 0 discriminator 2
+ 584 00ce 0198     		ldr	r0, [sp, #4]
+ 585 00d0 FFF7FEFF 		bl	CyDelayUs
+ 586              	.LVL88:
+ 587              	.LBE3:
+ 112:.\fonction.c  ****         
+ 588              		.loc 1 112 0 discriminator 2
+ 589 00d4 0137     		add	r7, r7, #1
+ 590              	.LVL89:
+ 591 00d6 FFB2     		uxtb	r7, r7
+ 592              	.LVL90:
+ 593              	.L19:
+ 112:.\fonction.c  ****         
+ 594              		.loc 1 112 0 is_stmt 0 discriminator 1
+ 595 00d8 4F45     		cmp	r7, r9
+ 596 00da C7D3     		bcc	.L22
+ 141:.\fonction.c  ****     Accelero_Stop();
+ 597              		.loc 1 141 0 is_stmt 1
+ 598 00dc 2D20     		mov	r0, #45
+ 599 00de 0021     		mov	r1, #0
+ 600 00e0 FFF7FEFF 		bl	accelero_write
+ 601              	.LVL91:
+ 142:.\fonction.c  ****     
+ 602              		.loc 1 142 0
+ 603 00e4 FFF7FEFF 		bl	Accelero_Stop
+ 604              	.LVL92:
+ 144:.\fonction.c  ****     *a_y = (uint16) sqrt(sum_square_acc_y/nb_acquisition);
+ 605              		.loc 1 144 0
+ 606 00e8 301C     		mov	r0, r6
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 17
+
+
+ 607 00ea 4946     		mov	r1, r9
+ 608 00ec FFF7FEFF 		bl	__aeabi_uidiv
+ 609              	.LVL93:
+ 610 00f0 061C     		mov	r6, r0
+ 611              	.LVL94:
+ 612 00f2 301C     		mov	r0, r6
+ 613 00f4 FFF7FEFF 		bl	__aeabi_ui2d
+ 614              	.LVL95:
+ 615 00f8 FFF7FEFF 		bl	sqrt
+ 616              	.LVL96:
+ 617 00fc FFF7FEFF 		bl	__aeabi_d2uiz
+ 618              	.LVL97:
+ 619 0100 4346     		mov	r3, r8
+ 620 0102 1880     		strh	r0, [r3]
+ 145:.\fonction.c  ****     *a_z = (uint16) sqrt(sum_square_acc_z/nb_acquisition);
+ 621              		.loc 1 145 0
+ 622 0104 281C     		mov	r0, r5
+ 623 0106 4946     		mov	r1, r9
+ 624 0108 FFF7FEFF 		bl	__aeabi_uidiv
+ 625              	.LVL98:
+ 626 010c 051C     		mov	r5, r0
+ 627              	.LVL99:
+ 628 010e 281C     		mov	r0, r5
+ 629 0110 FFF7FEFF 		bl	__aeabi_ui2d
+ 630              	.LVL100:
+ 631 0114 FFF7FEFF 		bl	sqrt
+ 632              	.LVL101:
+ 633 0118 FFF7FEFF 		bl	__aeabi_d2uiz
+ 634              	.LVL102:
+ 635 011c 029B     		ldr	r3, [sp, #8]
+ 636 011e 1880     		strh	r0, [r3]
+ 146:.\fonction.c  ****     
+ 637              		.loc 1 146 0
+ 638 0120 201C     		mov	r0, r4
+ 639 0122 4946     		mov	r1, r9
+ 640 0124 FFF7FEFF 		bl	__aeabi_uidiv
+ 641              	.LVL103:
+ 642 0128 041C     		mov	r4, r0
+ 643              	.LVL104:
+ 644 012a 201C     		mov	r0, r4
+ 645 012c FFF7FEFF 		bl	__aeabi_ui2d
+ 646              	.LVL105:
+ 647 0130 FFF7FEFF 		bl	sqrt
+ 648              	.LVL106:
+ 649 0134 FFF7FEFF 		bl	__aeabi_d2uiz
+ 650              	.LVL107:
+ 651 0138 039B     		ldr	r3, [sp, #12]
+ 652 013a 1880     		strh	r0, [r3]
+ 148:.\fonction.c  **** 
+ 653              		.loc 1 148 0
+ 654 013c 09B0     		add	sp, sp, #36
+ 655              		@ sp needed
+ 656              	.LVL108:
+ 657              	.LVL109:
+ 658 013e 3CBC     		pop	{r2, r3, r4, r5}
+ 659 0140 9046     		mov	r8, r2
+ 660 0142 9946     		mov	r9, r3
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 18
+
+
+ 661 0144 A246     		mov	r10, r4
+ 662 0146 AB46     		mov	fp, r5
+ 663 0148 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 664              	.L29:
+ 665 014a C046     		.align	2
+ 666              	.L28:
+ 667 014c 409C0000 		.word	40000
+ 668 0150 204E0000 		.word	20000
+ 669 0154 10270000 		.word	10000
+ 670 0158 88130000 		.word	5000
+ 671 015c C4090000 		.word	2500
+ 672              		.cfi_endproc
+ 673              	.LFE35:
+ 674              		.size	accelero_acquisition_efficace, .-accelero_acquisition_efficace
+ 675              		.text
+ 676              	.Letext0:
+ 677              		.file 2 "Generated_Source\\PSoC4/cytypes.h"
+ 678              		.file 3 "Generated_Source\\PSoC4/WdtIsr.h"
+ 679              		.file 4 "Generated_Source\\PSoC4/CyLFClk.h"
+ 680              		.file 5 "Generated_Source\\PSoC4/Pin_gestion_sleep_xbee.h"
+ 681              		.file 6 "Generated_Source\\PSoC4/CyLib.h"
+ 682              		.file 7 "Generated_Source\\PSoC4/Pin_tx.h"
+ 683              		.file 8 "Generated_Source\\PSoC4/zigbee.h"
+ 684              		.file 9 "c:\\program files (x86)\\cypress\\psoc creator\\3.3\\psoc creator\\import\\gnu\\arm\\4.9.
+ 685              		.file 10 "Generated_Source\\PSoC4/Accelero_I2C.h"
+ 686              		.file 11 "Generated_Source\\PSoC4/Accelero.h"
+ 687              		.section	.debug_info,"",%progbits
+ 688              	.Ldebug_info0:
+ 689 0000 78080000 		.4byte	0x878
+ 690 0004 0400     		.2byte	0x4
+ 691 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 692 000a 04       		.byte	0x4
+ 693 000b 01       		.uleb128 0x1
+ 694 000c A8010000 		.4byte	.LASF67
+ 695 0010 01       		.byte	0x1
+ 696 0011 6B030000 		.4byte	.LASF68
+ 697 0015 A4020000 		.4byte	.LASF69
+ 698 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 699 001d 00000000 		.4byte	0
+ 700 0021 00000000 		.4byte	.Ldebug_line0
+ 701 0025 02       		.uleb128 0x2
+ 702 0026 01       		.byte	0x1
+ 703 0027 06       		.byte	0x6
+ 704 0028 64020000 		.4byte	.LASF0
+ 705 002c 02       		.uleb128 0x2
+ 706 002d 01       		.byte	0x1
+ 707 002e 08       		.byte	0x8
+ 708 002f 9A010000 		.4byte	.LASF1
+ 709 0033 02       		.uleb128 0x2
+ 710 0034 02       		.byte	0x2
+ 711 0035 05       		.byte	0x5
+ 712 0036 26000000 		.4byte	.LASF2
+ 713 003a 02       		.uleb128 0x2
+ 714 003b 02       		.byte	0x2
+ 715 003c 07       		.byte	0x7
+ 716 003d 10030000 		.4byte	.LASF3
+ 717 0041 02       		.uleb128 0x2
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 19
+
+
+ 718 0042 04       		.byte	0x4
+ 719 0043 05       		.byte	0x5
+ 720 0044 53010000 		.4byte	.LASF4
+ 721 0048 02       		.uleb128 0x2
+ 722 0049 04       		.byte	0x4
+ 723 004a 07       		.byte	0x7
+ 724 004b A4030000 		.4byte	.LASF5
+ 725 004f 02       		.uleb128 0x2
+ 726 0050 08       		.byte	0x8
+ 727 0051 05       		.byte	0x5
+ 728 0052 2A010000 		.4byte	.LASF6
+ 729 0056 02       		.uleb128 0x2
+ 730 0057 08       		.byte	0x8
+ 731 0058 07       		.byte	0x7
+ 732 0059 70020000 		.4byte	.LASF7
+ 733 005d 03       		.uleb128 0x3
+ 734 005e 04       		.byte	0x4
+ 735 005f 05       		.byte	0x5
+ 736 0060 696E7400 		.ascii	"int\000"
+ 737 0064 02       		.uleb128 0x2
+ 738 0065 04       		.byte	0x4
+ 739 0066 07       		.byte	0x7
+ 740 0067 87020000 		.4byte	.LASF8
+ 741 006b 04       		.uleb128 0x4
+ 742 006c E2000000 		.4byte	.LASF9
+ 743 0070 02       		.byte	0x2
+ 744 0071 C2       		.byte	0xc2
+ 745 0072 2C000000 		.4byte	0x2c
+ 746 0076 04       		.uleb128 0x4
+ 747 0077 B1000000 		.4byte	.LASF10
+ 748 007b 02       		.byte	0x2
+ 749 007c C3       		.byte	0xc3
+ 750 007d 3A000000 		.4byte	0x3a
+ 751 0081 04       		.uleb128 0x4
+ 752 0082 9D030000 		.4byte	.LASF11
+ 753 0086 02       		.byte	0x2
+ 754 0087 C4       		.byte	0xc4
+ 755 0088 48000000 		.4byte	0x48
+ 756 008c 04       		.uleb128 0x4
+ 757 008d 45010000 		.4byte	.LASF12
+ 758 0091 02       		.byte	0x2
+ 759 0092 C5       		.byte	0xc5
+ 760 0093 25000000 		.4byte	0x25
+ 761 0097 04       		.uleb128 0x4
+ 762 0098 DC000000 		.4byte	.LASF13
+ 763 009c 02       		.byte	0x2
+ 764 009d C6       		.byte	0xc6
+ 765 009e 33000000 		.4byte	0x33
+ 766 00a2 02       		.uleb128 0x2
+ 767 00a3 04       		.byte	0x4
+ 768 00a4 04       		.byte	0x4
+ 769 00a5 24010000 		.4byte	.LASF14
+ 770 00a9 02       		.uleb128 0x2
+ 771 00aa 08       		.byte	0x8
+ 772 00ab 04       		.byte	0x4
+ 773 00ac B6030000 		.4byte	.LASF15
+ 774 00b0 02       		.uleb128 0x2
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 20
+
+
+ 775 00b1 01       		.byte	0x1
+ 776 00b2 08       		.byte	0x8
+ 777 00b3 32030000 		.4byte	.LASF16
+ 778 00b7 05       		.uleb128 0x5
+ 779 00b8 38010000 		.4byte	.LASF17
+ 780 00bc 02       		.byte	0x2
+ 781 00bd 7E01     		.2byte	0x17e
+ 782 00bf C3000000 		.4byte	0xc3
+ 783 00c3 06       		.uleb128 0x6
+ 784 00c4 04       		.byte	0x4
+ 785 00c5 C9000000 		.4byte	0xc9
+ 786 00c9 07       		.uleb128 0x7
+ 787 00ca 02       		.uleb128 0x2
+ 788 00cb 04       		.byte	0x4
+ 789 00cc 07       		.byte	0x7
+ 790 00cd 3C000000 		.4byte	.LASF18
+ 791 00d1 02       		.uleb128 0x2
+ 792 00d2 08       		.byte	0x8
+ 793 00d3 04       		.byte	0x4
+ 794 00d4 46020000 		.4byte	.LASF19
+ 795 00d8 08       		.uleb128 0x8
+ 796 00d9 9B000000 		.4byte	.LASF21
+ 797 00dd 01       		.byte	0x1
+ 798 00de 3A       		.byte	0x3a
+ 799 00df 00000000 		.4byte	.LFB34
+ 800 00e3 50000000 		.4byte	.LFE34-.LFB34
+ 801 00e7 01       		.uleb128 0x1
+ 802 00e8 9C       		.byte	0x9c
+ 803 00e9 BD010000 		.4byte	0x1bd
+ 804 00ed 09       		.uleb128 0x9
+ 805 00ee 4A010000 		.4byte	.LASF20
+ 806 00f2 01       		.byte	0x1
+ 807 00f3 3A       		.byte	0x3a
+ 808 00f4 8C000000 		.4byte	0x8c
+ 809 00f8 00000000 		.4byte	.LLST0
+ 810 00fc 0A       		.uleb128 0xa
+ 811 00fd 0A000000 		.4byte	.LVL2
+ 812 0101 FF060000 		.4byte	0x6ff
+ 813 0105 0B       		.uleb128 0xb
+ 814 0106 12000000 		.4byte	.LVL3
+ 815 010a 10070000 		.4byte	0x710
+ 816 010e 1D010000 		.4byte	0x11d
+ 817 0112 0C       		.uleb128 0xc
+ 818 0113 01       		.uleb128 0x1
+ 819 0114 51       		.byte	0x51
+ 820 0115 01       		.uleb128 0x1
+ 821 0116 30       		.byte	0x30
+ 822 0117 0C       		.uleb128 0xc
+ 823 0118 01       		.uleb128 0x1
+ 824 0119 50       		.byte	0x50
+ 825 011a 01       		.uleb128 0x1
+ 826 011b 30       		.byte	0x30
+ 827 011c 00       		.byte	0
+ 828 011d 0B       		.uleb128 0xb
+ 829 011e 1C000000 		.4byte	.LVL4
+ 830 0122 26070000 		.4byte	0x726
+ 831 0126 37010000 		.4byte	0x137
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 21
+
+
+ 832 012a 0C       		.uleb128 0xc
+ 833 012b 01       		.uleb128 0x1
+ 834 012c 51       		.byte	0x51
+ 835 012d 03       		.uleb128 0x3
+ 836 012e 0A       		.byte	0xa
+ 837 012f 007D     		.2byte	0x7d00
+ 838 0131 0C       		.uleb128 0xc
+ 839 0132 01       		.uleb128 0x1
+ 840 0133 50       		.byte	0x50
+ 841 0134 01       		.uleb128 0x1
+ 842 0135 30       		.byte	0x30
+ 843 0136 00       		.byte	0
+ 844 0137 0B       		.uleb128 0xb
+ 845 0138 24000000 		.4byte	.LVL5
+ 846 013c 3C070000 		.4byte	0x73c
+ 847 0140 4F010000 		.4byte	0x14f
+ 848 0144 0C       		.uleb128 0xc
+ 849 0145 01       		.uleb128 0x1
+ 850 0146 51       		.byte	0x51
+ 851 0147 01       		.uleb128 0x1
+ 852 0148 31       		.byte	0x31
+ 853 0149 0C       		.uleb128 0xc
+ 854 014a 01       		.uleb128 0x1
+ 855 014b 50       		.byte	0x50
+ 856 014c 01       		.uleb128 0x1
+ 857 014d 30       		.byte	0x30
+ 858 014e 00       		.byte	0
+ 859 014f 0B       		.uleb128 0xb
+ 860 0150 2A000000 		.4byte	.LVL6
+ 861 0154 52070000 		.4byte	0x752
+ 862 0158 62010000 		.4byte	0x162
+ 863 015c 0C       		.uleb128 0xc
+ 864 015d 01       		.uleb128 0x1
+ 865 015e 50       		.byte	0x50
+ 866 015f 01       		.uleb128 0x1
+ 867 0160 38       		.byte	0x38
+ 868 0161 00       		.byte	0
+ 869 0162 0B       		.uleb128 0xb
+ 870 0163 32000000 		.4byte	.LVL7
+ 871 0167 26070000 		.4byte	0x726
+ 872 016b 7B010000 		.4byte	0x17b
+ 873 016f 0C       		.uleb128 0xc
+ 874 0170 01       		.uleb128 0x1
+ 875 0171 51       		.byte	0x51
+ 876 0172 02       		.uleb128 0x2
+ 877 0173 74       		.byte	0x74
+ 878 0174 00       		.sleb128 0
+ 879 0175 0C       		.uleb128 0xc
+ 880 0176 01       		.uleb128 0x1
+ 881 0177 50       		.byte	0x50
+ 882 0178 01       		.uleb128 0x1
+ 883 0179 31       		.byte	0x31
+ 884 017a 00       		.byte	0
+ 885 017b 0B       		.uleb128 0xb
+ 886 017c 3A000000 		.4byte	.LVL8
+ 887 0180 10070000 		.4byte	0x710
+ 888 0184 93010000 		.4byte	0x193
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 22
+
+
+ 889 0188 0C       		.uleb128 0xc
+ 890 0189 01       		.uleb128 0x1
+ 891 018a 51       		.byte	0x51
+ 892 018b 01       		.uleb128 0x1
+ 893 018c 31       		.byte	0x31
+ 894 018d 0C       		.uleb128 0xc
+ 895 018e 01       		.uleb128 0x1
+ 896 018f 50       		.byte	0x50
+ 897 0190 01       		.uleb128 0x1
+ 898 0191 31       		.byte	0x31
+ 899 0192 00       		.byte	0
+ 900 0193 0B       		.uleb128 0xb
+ 901 0194 42000000 		.4byte	.LVL9
+ 902 0198 3C070000 		.4byte	0x73c
+ 903 019c AB010000 		.4byte	0x1ab
+ 904 01a0 0C       		.uleb128 0xc
+ 905 01a1 01       		.uleb128 0x1
+ 906 01a2 51       		.byte	0x51
+ 907 01a3 01       		.uleb128 0x1
+ 908 01a4 31       		.byte	0x31
+ 909 01a5 0C       		.uleb128 0xc
+ 910 01a6 01       		.uleb128 0x1
+ 911 01a7 50       		.byte	0x50
+ 912 01a8 01       		.uleb128 0x1
+ 913 01a9 31       		.byte	0x31
+ 914 01aa 00       		.byte	0
+ 915 01ab 0D       		.uleb128 0xd
+ 916 01ac 4A000000 		.4byte	.LVL10
+ 917 01b0 63070000 		.4byte	0x763
+ 918 01b4 0C       		.uleb128 0xc
+ 919 01b5 01       		.uleb128 0x1
+ 920 01b6 50       		.byte	0x50
+ 921 01b7 03       		.uleb128 0x3
+ 922 01b8 0A       		.byte	0xa
+ 923 01b9 0101     		.2byte	0x101
+ 924 01bb 00       		.byte	0
+ 925 01bc 00       		.byte	0
+ 926 01bd 0E       		.uleb128 0xe
+ 927 01be BD030000 		.4byte	.LASF24
+ 928 01c2 01       		.byte	0x1
+ 929 01c3 96       		.byte	0x96
+ 930 01c4 76000000 		.4byte	0x76
+ 931 01c8 00000000 		.4byte	.LFB36
+ 932 01cc 1E000000 		.4byte	.LFE36-.LFB36
+ 933 01d0 01       		.uleb128 0x1
+ 934 01d1 9C       		.byte	0x9c
+ 935 01d2 0D020000 		.4byte	0x20d
+ 936 01d6 0F       		.uleb128 0xf
+ 937 01d7 615F7800 		.ascii	"a_x\000"
+ 938 01db 01       		.byte	0x1
+ 939 01dc 96       		.byte	0x96
+ 940 01dd 76000000 		.4byte	0x76
+ 941 01e1 21000000 		.4byte	.LLST1
+ 942 01e5 0F       		.uleb128 0xf
+ 943 01e6 615F7900 		.ascii	"a_y\000"
+ 944 01ea 01       		.byte	0x1
+ 945 01eb 96       		.byte	0x96
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 23
+
+
+ 946 01ec 76000000 		.4byte	0x76
+ 947 01f0 42000000 		.4byte	.LLST2
+ 948 01f4 0F       		.uleb128 0xf
+ 949 01f5 615F7A00 		.ascii	"a_z\000"
+ 950 01f9 01       		.byte	0x1
+ 951 01fa 96       		.byte	0x96
+ 952 01fb 76000000 		.4byte	0x76
+ 953 01ff 63000000 		.4byte	.LLST3
+ 954 0203 0A       		.uleb128 0xa
+ 955 0204 16000000 		.4byte	.LVL16
+ 956 0208 74070000 		.4byte	0x774
+ 957 020c 00       		.byte	0
+ 958 020d 08       		.uleb128 0x8
+ 959 020e 77010000 		.4byte	.LASF22
+ 960 0212 01       		.byte	0x1
+ 961 0213 9C       		.byte	0x9c
+ 962 0214 00000000 		.4byte	.LFB37
+ 963 0218 82000000 		.4byte	.LFE37-.LFB37
+ 964 021c 01       		.uleb128 0x1
+ 965 021d 9C       		.byte	0x9c
+ 966 021e 49030000 		.4byte	0x349
+ 967 0222 0F       		.uleb128 0xf
+ 968 0223 615F7800 		.ascii	"a_x\000"
+ 969 0227 01       		.byte	0x1
+ 970 0228 9C       		.byte	0x9c
+ 971 0229 76000000 		.4byte	0x76
+ 972 022d 84000000 		.4byte	.LLST4
+ 973 0231 0F       		.uleb128 0xf
+ 974 0232 615F7900 		.ascii	"a_y\000"
+ 975 0236 01       		.byte	0x1
+ 976 0237 9C       		.byte	0x9c
+ 977 0238 76000000 		.4byte	0x76
+ 978 023c A5000000 		.4byte	.LLST5
+ 979 0240 0F       		.uleb128 0xf
+ 980 0241 615F7A00 		.ascii	"a_z\000"
+ 981 0245 01       		.byte	0x1
+ 982 0246 9C       		.byte	0x9c
+ 983 0247 76000000 		.4byte	0x76
+ 984 024b C6000000 		.4byte	.LLST6
+ 985 024f 09       		.uleb128 0x9
+ 986 0250 8C030000 		.4byte	.LASF23
+ 987 0254 01       		.byte	0x1
+ 988 0255 9C       		.byte	0x9c
+ 989 0256 76000000 		.4byte	0x76
+ 990 025a E7000000 		.4byte	.LLST7
+ 991 025e 10       		.uleb128 0x10
+ 992 025f 78030000 		.4byte	.LASF27
+ 993 0263 01       		.byte	0x1
+ 994 0264 B1       		.byte	0xb1
+ 995 0265 49030000 		.4byte	0x349
+ 996 0269 02       		.uleb128 0x2
+ 997 026a 91       		.byte	0x91
+ 998 026b 68       		.sleb128 -24
+ 999 026c 0B       		.uleb128 0xb
+ 1000 026d 36000000 		.4byte	.LVL23
+ 1001 0271 89070000 		.4byte	0x789
+ 1002 0275 7F020000 		.4byte	0x27f
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 24
+
+
+ 1003 0279 0C       		.uleb128 0xc
+ 1004 027a 01       		.uleb128 0x1
+ 1005 027b 50       		.byte	0x50
+ 1006 027c 01       		.uleb128 0x1
+ 1007 027d 36       		.byte	0x36
+ 1008 027e 00       		.byte	0
+ 1009 027f 0B       		.uleb128 0xb
+ 1010 0280 3C000000 		.4byte	.LVL24
+ 1011 0284 9A070000 		.4byte	0x79a
+ 1012 0288 92020000 		.4byte	0x292
+ 1013 028c 0C       		.uleb128 0xc
+ 1014 028d 01       		.uleb128 0x1
+ 1015 028e 50       		.byte	0x50
+ 1016 028f 01       		.uleb128 0x1
+ 1017 0290 30       		.byte	0x30
+ 1018 0291 00       		.byte	0
+ 1019 0292 0B       		.uleb128 0xb
+ 1020 0293 42000000 		.4byte	.LVL25
+ 1021 0297 AB070000 		.4byte	0x7ab
+ 1022 029b A5020000 		.4byte	0x2a5
+ 1023 029f 0C       		.uleb128 0xc
+ 1024 02a0 01       		.uleb128 0x1
+ 1025 02a1 50       		.byte	0x50
+ 1026 02a2 01       		.uleb128 0x1
+ 1027 02a3 3A       		.byte	0x3a
+ 1028 02a4 00       		.byte	0
+ 1029 02a5 0B       		.uleb128 0xb
+ 1030 02a6 48000000 		.4byte	.LVL26
+ 1031 02aa BC070000 		.4byte	0x7bc
+ 1032 02ae B8020000 		.4byte	0x2b8
+ 1033 02b2 0C       		.uleb128 0xc
+ 1034 02b3 01       		.uleb128 0x1
+ 1035 02b4 50       		.byte	0x50
+ 1036 02b5 01       		.uleb128 0x1
+ 1037 02b6 36       		.byte	0x36
+ 1038 02b7 00       		.byte	0
+ 1039 02b8 0A       		.uleb128 0xa
+ 1040 02b9 4C000000 		.4byte	.LVL27
+ 1041 02bd CD070000 		.4byte	0x7cd
+ 1042 02c1 0B       		.uleb128 0xb
+ 1043 02c2 54000000 		.4byte	.LVL28
+ 1044 02c6 D4070000 		.4byte	0x7d4
+ 1045 02ca DA020000 		.4byte	0x2da
+ 1046 02ce 0C       		.uleb128 0xc
+ 1047 02cf 01       		.uleb128 0x1
+ 1048 02d0 51       		.byte	0x51
+ 1049 02d1 01       		.uleb128 0x1
+ 1050 02d2 36       		.byte	0x36
+ 1051 02d3 0C       		.uleb128 0xc
+ 1052 02d4 01       		.uleb128 0x1
+ 1053 02d5 50       		.byte	0x50
+ 1054 02d6 02       		.uleb128 0x2
+ 1055 02d7 7D       		.byte	0x7d
+ 1056 02d8 00       		.sleb128 0
+ 1057 02d9 00       		.byte	0
+ 1058 02da 0B       		.uleb128 0xb
+ 1059 02db 5A000000 		.4byte	.LVL29
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 25
+
+
+ 1060 02df AB070000 		.4byte	0x7ab
+ 1061 02e3 EE020000 		.4byte	0x2ee
+ 1062 02e7 0C       		.uleb128 0xc
+ 1063 02e8 01       		.uleb128 0x1
+ 1064 02e9 50       		.byte	0x50
+ 1065 02ea 02       		.uleb128 0x2
+ 1066 02eb 08       		.byte	0x8
+ 1067 02ec 32       		.byte	0x32
+ 1068 02ed 00       		.byte	0
+ 1069 02ee 0A       		.uleb128 0xa
+ 1070 02ef 5E000000 		.4byte	.LVL30
+ 1071 02f3 F5070000 		.4byte	0x7f5
+ 1072 02f7 0A       		.uleb128 0xa
+ 1073 02f8 66000000 		.4byte	.LVL31
+ 1074 02fc 00080000 		.4byte	0x800
+ 1075 0300 0B       		.uleb128 0xb
+ 1076 0301 6C000000 		.4byte	.LVL32
+ 1077 0305 AB070000 		.4byte	0x7ab
+ 1078 0309 13030000 		.4byte	0x313
+ 1079 030d 0C       		.uleb128 0xc
+ 1080 030e 01       		.uleb128 0x1
+ 1081 030f 50       		.byte	0x50
+ 1082 0310 01       		.uleb128 0x1
+ 1083 0311 35       		.byte	0x35
+ 1084 0312 00       		.byte	0
+ 1085 0313 0B       		.uleb128 0xb
+ 1086 0314 72000000 		.4byte	.LVL33
+ 1087 0318 BC070000 		.4byte	0x7bc
+ 1088 031c 26030000 		.4byte	0x326
+ 1089 0320 0C       		.uleb128 0xc
+ 1090 0321 01       		.uleb128 0x1
+ 1091 0322 50       		.byte	0x50
+ 1092 0323 01       		.uleb128 0x1
+ 1093 0324 31       		.byte	0x31
+ 1094 0325 00       		.byte	0
+ 1095 0326 0B       		.uleb128 0xb
+ 1096 0327 78000000 		.4byte	.LVL34
+ 1097 032b 89070000 		.4byte	0x789
+ 1098 032f 39030000 		.4byte	0x339
+ 1099 0333 0C       		.uleb128 0xc
+ 1100 0334 01       		.uleb128 0x1
+ 1101 0335 50       		.byte	0x50
+ 1102 0336 01       		.uleb128 0x1
+ 1103 0337 31       		.byte	0x31
+ 1104 0338 00       		.byte	0
+ 1105 0339 0D       		.uleb128 0xd
+ 1106 033a 7E000000 		.4byte	.LVL35
+ 1107 033e 9A070000 		.4byte	0x79a
+ 1108 0342 0C       		.uleb128 0xc
+ 1109 0343 01       		.uleb128 0x1
+ 1110 0344 50       		.byte	0x50
+ 1111 0345 01       		.uleb128 0x1
+ 1112 0346 31       		.byte	0x31
+ 1113 0347 00       		.byte	0
+ 1114 0348 00       		.byte	0
+ 1115 0349 11       		.uleb128 0x11
+ 1116 034a 6B000000 		.4byte	0x6b
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 26
+
+
+ 1117 034e 59030000 		.4byte	0x359
+ 1118 0352 12       		.uleb128 0x12
+ 1119 0353 CA000000 		.4byte	0xca
+ 1120 0357 05       		.byte	0x5
+ 1121 0358 00       		.byte	0
+ 1122 0359 13       		.uleb128 0x13
+ 1123 035a 4B040000 		.4byte	.LASF25
+ 1124 035e 01       		.byte	0x1
+ 1125 035f E7       		.byte	0xe7
+ 1126 0360 6B000000 		.4byte	0x6b
+ 1127 0364 00000000 		.4byte	.LFB38
+ 1128 0368 3C000000 		.4byte	.LFE38-.LFB38
+ 1129 036c 01       		.uleb128 0x1
+ 1130 036d 9C       		.byte	0x9c
+ 1131 036e 04040000 		.4byte	0x404
+ 1132 0372 09       		.uleb128 0x9
+ 1133 0373 36020000 		.4byte	.LASF26
+ 1134 0377 01       		.byte	0x1
+ 1135 0378 E7       		.byte	0xe7
+ 1136 0379 6B000000 		.4byte	0x6b
+ 1137 037d 08010000 		.4byte	.LLST8
+ 1138 0381 14       		.uleb128 0x14
+ 1139 0382 7800     		.ascii	"x\000"
+ 1140 0384 01       		.byte	0x1
+ 1141 0385 E9       		.byte	0xe9
+ 1142 0386 6B000000 		.4byte	0x6b
+ 1143 038a 35010000 		.4byte	.LLST9
+ 1144 038e 10       		.uleb128 0x10
+ 1145 038f 5C020000 		.4byte	.LASF28
+ 1146 0393 01       		.byte	0x1
+ 1147 0394 EA       		.byte	0xea
+ 1148 0395 6B000000 		.4byte	0x6b
+ 1149 0399 02       		.uleb128 0x2
+ 1150 039a 91       		.byte	0x91
+ 1151 039b 77       		.sleb128 -9
+ 1152 039c 15       		.uleb128 0x15
+ 1153 039d 0A000000 		.4byte	.LBB2
+ 1154 03a1 0E000000 		.4byte	.LBE2-.LBB2
+ 1155 03a5 D7030000 		.4byte	0x3d7
+ 1156 03a9 10       		.uleb128 0x10
+ 1157 03aa 37030000 		.4byte	.LASF29
+ 1158 03ae 01       		.byte	0x1
+ 1159 03af ED       		.byte	0xed
+ 1160 03b0 04040000 		.4byte	0x404
+ 1161 03b4 02       		.uleb128 0x2
+ 1162 03b5 91       		.byte	0x91
+ 1163 03b6 74       		.sleb128 -12
+ 1164 03b7 0D       		.uleb128 0xd
+ 1165 03b8 18000000 		.4byte	.LVL38
+ 1166 03bc 07080000 		.4byte	0x807
+ 1167 03c0 0C       		.uleb128 0xc
+ 1168 03c1 01       		.uleb128 0x1
+ 1169 03c2 53       		.byte	0x53
+ 1170 03c3 01       		.uleb128 0x1
+ 1171 03c4 30       		.byte	0x30
+ 1172 03c5 0C       		.uleb128 0xc
+ 1173 03c6 01       		.uleb128 0x1
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 27
+
+
+ 1174 03c7 52       		.byte	0x52
+ 1175 03c8 01       		.uleb128 0x1
+ 1176 03c9 31       		.byte	0x31
+ 1177 03ca 0C       		.uleb128 0xc
+ 1178 03cb 01       		.uleb128 0x1
+ 1179 03cc 51       		.byte	0x51
+ 1180 03cd 02       		.uleb128 0x2
+ 1181 03ce 91       		.byte	0x91
+ 1182 03cf 74       		.sleb128 -12
+ 1183 03d0 0C       		.uleb128 0xc
+ 1184 03d1 01       		.uleb128 0x1
+ 1185 03d2 50       		.byte	0x50
+ 1186 03d3 01       		.uleb128 0x1
+ 1187 03d4 4D       		.byte	0x4d
+ 1188 03d5 00       		.byte	0
+ 1189 03d6 00       		.byte	0
+ 1190 03d7 0B       		.uleb128 0xb
+ 1191 03d8 26000000 		.4byte	.LVL39
+ 1192 03dc 31080000 		.4byte	0x831
+ 1193 03e0 FA030000 		.4byte	0x3fa
+ 1194 03e4 0C       		.uleb128 0xc
+ 1195 03e5 01       		.uleb128 0x1
+ 1196 03e6 53       		.byte	0x53
+ 1197 03e7 01       		.uleb128 0x1
+ 1198 03e8 30       		.byte	0x30
+ 1199 03e9 0C       		.uleb128 0xc
+ 1200 03ea 01       		.uleb128 0x1
+ 1201 03eb 52       		.byte	0x52
+ 1202 03ec 01       		.uleb128 0x1
+ 1203 03ed 31       		.byte	0x31
+ 1204 03ee 0C       		.uleb128 0xc
+ 1205 03ef 01       		.uleb128 0x1
+ 1206 03f0 51       		.byte	0x51
+ 1207 03f1 02       		.uleb128 0x2
+ 1208 03f2 7D       		.byte	0x7d
+ 1209 03f3 07       		.sleb128 7
+ 1210 03f4 0C       		.uleb128 0xc
+ 1211 03f5 01       		.uleb128 0x1
+ 1212 03f6 50       		.byte	0x50
+ 1213 03f7 01       		.uleb128 0x1
+ 1214 03f8 4D       		.byte	0x4d
+ 1215 03f9 00       		.byte	0
+ 1216 03fa 0A       		.uleb128 0xa
+ 1217 03fb 30000000 		.4byte	.LVL42
+ 1218 03ff 55080000 		.4byte	0x855
+ 1219 0403 00       		.byte	0
+ 1220 0404 11       		.uleb128 0x11
+ 1221 0405 6B000000 		.4byte	0x6b
+ 1222 0409 14040000 		.4byte	0x414
+ 1223 040d 12       		.uleb128 0x12
+ 1224 040e CA000000 		.4byte	0xca
+ 1225 0412 00       		.byte	0
+ 1226 0413 00       		.byte	0
+ 1227 0414 08       		.uleb128 0x8
+ 1228 0415 F7000000 		.4byte	.LASF30
+ 1229 0419 01       		.byte	0x1
+ 1230 041a FE       		.byte	0xfe
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 28
+
+
+ 1231 041b 00000000 		.4byte	.LFB39
+ 1232 041f 22000000 		.4byte	.LFE39-.LFB39
+ 1233 0423 01       		.uleb128 0x1
+ 1234 0424 9C       		.byte	0x9c
+ 1235 0425 83040000 		.4byte	0x483
+ 1236 0429 09       		.uleb128 0x9
+ 1237 042a 36020000 		.4byte	.LASF26
+ 1238 042e 01       		.byte	0x1
+ 1239 042f FE       		.byte	0xfe
+ 1240 0430 6B000000 		.4byte	0x6b
+ 1241 0434 48010000 		.4byte	.LLST10
+ 1242 0438 09       		.uleb128 0x9
+ 1243 0439 37030000 		.4byte	.LASF29
+ 1244 043d 01       		.byte	0x1
+ 1245 043e FE       		.byte	0xfe
+ 1246 043f 6B000000 		.4byte	0x6b
+ 1247 0443 81010000 		.4byte	.LLST11
+ 1248 0447 16       		.uleb128 0x16
+ 1249 0448 96030000 		.4byte	.LASF31
+ 1250 044c 01       		.byte	0x1
+ 1251 044d 0001     		.2byte	0x100
+ 1252 044f 83040000 		.4byte	0x483
+ 1253 0453 02       		.uleb128 0x2
+ 1254 0454 91       		.byte	0x91
+ 1255 0455 74       		.sleb128 -12
+ 1256 0456 0B       		.uleb128 0xb
+ 1257 0457 16000000 		.4byte	.LVL47
+ 1258 045b 07080000 		.4byte	0x807
+ 1259 045f 79040000 		.4byte	0x479
+ 1260 0463 0C       		.uleb128 0xc
+ 1261 0464 01       		.uleb128 0x1
+ 1262 0465 53       		.byte	0x53
+ 1263 0466 01       		.uleb128 0x1
+ 1264 0467 30       		.byte	0x30
+ 1265 0468 0C       		.uleb128 0xc
+ 1266 0469 01       		.uleb128 0x1
+ 1267 046a 52       		.byte	0x52
+ 1268 046b 01       		.uleb128 0x1
+ 1269 046c 32       		.byte	0x32
+ 1270 046d 0C       		.uleb128 0xc
+ 1271 046e 01       		.uleb128 0x1
+ 1272 046f 51       		.byte	0x51
+ 1273 0470 02       		.uleb128 0x2
+ 1274 0471 91       		.byte	0x91
+ 1275 0472 74       		.sleb128 -12
+ 1276 0473 0C       		.uleb128 0xc
+ 1277 0474 01       		.uleb128 0x1
+ 1278 0475 50       		.byte	0x50
+ 1279 0476 01       		.uleb128 0x1
+ 1280 0477 4D       		.byte	0x4d
+ 1281 0478 00       		.byte	0
+ 1282 0479 0A       		.uleb128 0xa
+ 1283 047a 1A000000 		.4byte	.LVL48
+ 1284 047e 55080000 		.4byte	0x855
+ 1285 0482 00       		.byte	0
+ 1286 0483 11       		.uleb128 0x11
+ 1287 0484 6B000000 		.4byte	0x6b
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 29
+
+
+ 1288 0488 93040000 		.4byte	0x493
+ 1289 048c 12       		.uleb128 0x12
+ 1290 048d CA000000 		.4byte	0xca
+ 1291 0491 01       		.byte	0x1
+ 1292 0492 00       		.byte	0
+ 1293 0493 08       		.uleb128 0x8
+ 1294 0494 69010000 		.4byte	.LASF32
+ 1295 0498 01       		.byte	0x1
+ 1296 0499 27       		.byte	0x27
+ 1297 049a 00000000 		.4byte	.LFB33
+ 1298 049e 2A000000 		.4byte	.LFE33-.LFB33
+ 1299 04a2 01       		.uleb128 0x1
+ 1300 04a3 9C       		.byte	0x9c
+ 1301 04a4 16050000 		.4byte	0x516
+ 1302 04a8 09       		.uleb128 0x9
+ 1303 04a9 30040000 		.4byte	.LASF33
+ 1304 04ad 01       		.byte	0x1
+ 1305 04ae 27       		.byte	0x27
+ 1306 04af 5D000000 		.4byte	0x5d
+ 1307 04b3 BA010000 		.4byte	.LLST12
+ 1308 04b7 09       		.uleb128 0x9
+ 1309 04b8 3F030000 		.4byte	.LASF34
+ 1310 04bc 01       		.byte	0x1
+ 1311 04bd 27       		.byte	0x27
+ 1312 04be 5D000000 		.4byte	0x5d
+ 1313 04c2 E6010000 		.4byte	.LLST13
+ 1314 04c6 09       		.uleb128 0x9
+ 1315 04c7 46040000 		.4byte	.LASF35
+ 1316 04cb 01       		.byte	0x1
+ 1317 04cc 27       		.byte	0x27
+ 1318 04cd 5D000000 		.4byte	0x5d
+ 1319 04d1 12020000 		.4byte	.LLST14
+ 1320 04d5 0A       		.uleb128 0xa
+ 1321 04d6 0C000000 		.4byte	.LVL50
+ 1322 04da 60080000 		.4byte	0x860
+ 1323 04de 0B       		.uleb128 0xb
+ 1324 04df 16000000 		.4byte	.LVL52
+ 1325 04e3 14040000 		.4byte	0x414
+ 1326 04e7 F8040000 		.4byte	0x4f8
+ 1327 04eb 0C       		.uleb128 0xc
+ 1328 04ec 01       		.uleb128 0x1
+ 1329 04ed 51       		.byte	0x51
+ 1330 04ee 02       		.uleb128 0x2
+ 1331 04ef 74       		.byte	0x74
+ 1332 04f0 00       		.sleb128 0
+ 1333 04f1 0C       		.uleb128 0xc
+ 1334 04f2 01       		.uleb128 0x1
+ 1335 04f3 50       		.byte	0x50
+ 1336 04f4 02       		.uleb128 0x2
+ 1337 04f5 08       		.byte	0x8
+ 1338 04f6 31       		.byte	0x31
+ 1339 04f7 00       		.byte	0
+ 1340 04f8 0B       		.uleb128 0xb
+ 1341 04f9 24000000 		.4byte	.LVL53
+ 1342 04fd 14040000 		.4byte	0x414
+ 1343 0501 0C050000 		.4byte	0x50c
+ 1344 0505 0C       		.uleb128 0xc
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 30
+
+
+ 1345 0506 01       		.uleb128 0x1
+ 1346 0507 50       		.byte	0x50
+ 1347 0508 02       		.uleb128 0x2
+ 1348 0509 08       		.byte	0x8
+ 1349 050a 2C       		.byte	0x2c
+ 1350 050b 00       		.byte	0
+ 1351 050c 0A       		.uleb128 0xa
+ 1352 050d 28000000 		.4byte	.LVL54
+ 1353 0511 67080000 		.4byte	0x867
+ 1354 0515 00       		.byte	0
+ 1355 0516 17       		.uleb128 0x17
+ 1356 0517 7D000000 		.4byte	.LASF36
+ 1357 051b 01       		.byte	0x1
+ 1358 051c 52       		.byte	0x52
+ 1359 051d 00000000 		.4byte	.LFB35
+ 1360 0521 60010000 		.4byte	.LFE35-.LFB35
+ 1361 0525 01       		.uleb128 0x1
+ 1362 0526 9C       		.byte	0x9c
+ 1363 0527 F9060000 		.4byte	0x6f9
+ 1364 052b 0F       		.uleb128 0xf
+ 1365 052c 615F7800 		.ascii	"a_x\000"
+ 1366 0530 01       		.byte	0x1
+ 1367 0531 52       		.byte	0x52
+ 1368 0532 F9060000 		.4byte	0x6f9
+ 1369 0536 3E020000 		.4byte	.LLST15
+ 1370 053a 0F       		.uleb128 0xf
+ 1371 053b 615F7900 		.ascii	"a_y\000"
+ 1372 053f 01       		.byte	0x1
+ 1373 0540 52       		.byte	0x52
+ 1374 0541 F9060000 		.4byte	0x6f9
+ 1375 0545 6A020000 		.4byte	.LLST16
+ 1376 0549 0F       		.uleb128 0xf
+ 1377 054a 615F7A00 		.ascii	"a_z\000"
+ 1378 054e 01       		.byte	0x1
+ 1379 054f 52       		.byte	0x52
+ 1380 0550 F9060000 		.4byte	0x6f9
+ 1381 0554 89020000 		.4byte	.LLST17
+ 1382 0558 09       		.uleb128 0x9
+ 1383 0559 23030000 		.4byte	.LASF37
+ 1384 055d 01       		.byte	0x1
+ 1385 055e 52       		.byte	0x52
+ 1386 055f 6B000000 		.4byte	0x6b
+ 1387 0563 BF020000 		.4byte	.LLST18
+ 1388 0567 09       		.uleb128 0x9
+ 1389 0568 15000000 		.4byte	.LASF38
+ 1390 056c 01       		.byte	0x1
+ 1391 056d 52       		.byte	0x52
+ 1392 056e 76000000 		.4byte	0x76
+ 1393 0572 E0020000 		.4byte	.LLST19
+ 1394 0576 18       		.uleb128 0x18
+ 1395 0577 1E010000 		.4byte	.LASF39
+ 1396 057b 01       		.byte	0x1
+ 1397 057c 54       		.byte	0x54
+ 1398 057d 76000000 		.4byte	0x76
+ 1399 0581 0C030000 		.4byte	.LLST20
+ 1400 0585 14       		.uleb128 0x14
+ 1401 0586 6900     		.ascii	"i\000"
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 31
+
+
+ 1402 0588 01       		.byte	0x1
+ 1403 0589 5E       		.byte	0x5e
+ 1404 058a 6B000000 		.4byte	0x6b
+ 1405 058e 2D030000 		.4byte	.LLST21
+ 1406 0592 18       		.uleb128 0x18
+ 1407 0593 00000000 		.4byte	.LASF40
+ 1408 0597 01       		.byte	0x1
+ 1409 0598 60       		.byte	0x60
+ 1410 0599 97000000 		.4byte	0x97
+ 1411 059d 57030000 		.4byte	.LLST22
+ 1412 05a1 18       		.uleb128 0x18
+ 1413 05a2 30000000 		.4byte	.LASF41
+ 1414 05a6 01       		.byte	0x1
+ 1415 05a7 61       		.byte	0x61
+ 1416 05a8 97000000 		.4byte	0x97
+ 1417 05ac A3030000 		.4byte	.LLST23
+ 1418 05b0 18       		.uleb128 0x18
+ 1419 05b1 36000000 		.4byte	.LASF42
+ 1420 05b5 01       		.byte	0x1
+ 1421 05b6 62       		.byte	0x62
+ 1422 05b7 97000000 		.4byte	0x97
+ 1423 05bb EF030000 		.4byte	.LLST24
+ 1424 05bf 18       		.uleb128 0x18
+ 1425 05c0 45000000 		.4byte	.LASF43
+ 1426 05c4 01       		.byte	0x1
+ 1427 05c5 64       		.byte	0x64
+ 1428 05c6 81000000 		.4byte	0x81
+ 1429 05ca 23040000 		.4byte	.LLST25
+ 1430 05ce 18       		.uleb128 0x18
+ 1431 05cf 56000000 		.4byte	.LASF44
+ 1432 05d3 01       		.byte	0x1
+ 1433 05d4 65       		.byte	0x65
+ 1434 05d5 81000000 		.4byte	0x81
+ 1435 05d9 42040000 		.4byte	.LLST26
+ 1436 05dd 18       		.uleb128 0x18
+ 1437 05de 67000000 		.4byte	.LASF45
+ 1438 05e2 01       		.byte	0x1
+ 1439 05e3 66       		.byte	0x66
+ 1440 05e4 81000000 		.4byte	0x81
+ 1441 05e8 61040000 		.4byte	.LLST27
+ 1442 05ec 10       		.uleb128 0x10
+ 1443 05ed 78000000 		.4byte	.LASF46
+ 1444 05f1 01       		.byte	0x1
+ 1445 05f2 68       		.byte	0x68
+ 1446 05f3 49030000 		.4byte	0x349
+ 1447 05f7 02       		.uleb128 0x2
+ 1448 05f8 91       		.byte	0x91
+ 1449 05f9 50       		.sleb128 -48
+ 1450 05fa 15       		.uleb128 0x15
+ 1451 05fb 6C000000 		.4byte	.LBB3
+ 1452 05ff 68000000 		.4byte	.LBE3-.LBB3
+ 1453 0603 85060000 		.4byte	0x685
+ 1454 0607 10       		.uleb128 0x10
+ 1455 0608 37030000 		.4byte	.LASF29
+ 1456 060c 01       		.byte	0x1
+ 1457 060d 73       		.byte	0x73
+ 1458 060e 04040000 		.4byte	0x404
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 32
+
+
+ 1459 0612 02       		.uleb128 0x2
+ 1460 0613 91       		.byte	0x91
+ 1461 0614 4C       		.sleb128 -52
+ 1462 0615 14       		.uleb128 0x14
+ 1463 0616 7800     		.ascii	"x\000"
+ 1464 0618 01       		.byte	0x1
+ 1465 0619 76       		.byte	0x76
+ 1466 061a 6B000000 		.4byte	0x6b
+ 1467 061e 80040000 		.4byte	.LLST28
+ 1468 0622 0B       		.uleb128 0xb
+ 1469 0623 7C000000 		.4byte	.LVL72
+ 1470 0627 07080000 		.4byte	0x807
+ 1471 062b 45060000 		.4byte	0x645
+ 1472 062f 0C       		.uleb128 0xc
+ 1473 0630 01       		.uleb128 0x1
+ 1474 0631 53       		.byte	0x53
+ 1475 0632 01       		.uleb128 0x1
+ 1476 0633 30       		.byte	0x30
+ 1477 0634 0C       		.uleb128 0xc
+ 1478 0635 01       		.uleb128 0x1
+ 1479 0636 52       		.byte	0x52
+ 1480 0637 01       		.uleb128 0x1
+ 1481 0638 31       		.byte	0x31
+ 1482 0639 0C       		.uleb128 0xc
+ 1483 063a 01       		.uleb128 0x1
+ 1484 063b 51       		.byte	0x51
+ 1485 063c 02       		.uleb128 0x2
+ 1486 063d 91       		.byte	0x91
+ 1487 063e 4C       		.sleb128 -52
+ 1488 063f 0C       		.uleb128 0xc
+ 1489 0640 01       		.uleb128 0x1
+ 1490 0641 50       		.byte	0x50
+ 1491 0642 01       		.uleb128 0x1
+ 1492 0643 4D       		.byte	0x4d
+ 1493 0644 00       		.byte	0
+ 1494 0645 0B       		.uleb128 0xb
+ 1495 0646 88000000 		.4byte	.LVL73
+ 1496 064a 31080000 		.4byte	0x831
+ 1497 064e 68060000 		.4byte	0x668
+ 1498 0652 0C       		.uleb128 0xc
+ 1499 0653 01       		.uleb128 0x1
+ 1500 0654 53       		.byte	0x53
+ 1501 0655 01       		.uleb128 0x1
+ 1502 0656 30       		.byte	0x30
+ 1503 0657 0C       		.uleb128 0xc
+ 1504 0658 01       		.uleb128 0x1
+ 1505 0659 52       		.byte	0x52
+ 1506 065a 01       		.uleb128 0x1
+ 1507 065b 36       		.byte	0x36
+ 1508 065c 0C       		.uleb128 0xc
+ 1509 065d 01       		.uleb128 0x1
+ 1510 065e 51       		.byte	0x51
+ 1511 065f 02       		.uleb128 0x2
+ 1512 0660 91       		.byte	0x91
+ 1513 0661 50       		.sleb128 -48
+ 1514 0662 0C       		.uleb128 0xc
+ 1515 0663 01       		.uleb128 0x1
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 33
+
+
+ 1516 0664 50       		.byte	0x50
+ 1517 0665 01       		.uleb128 0x1
+ 1518 0666 4D       		.byte	0x4d
+ 1519 0667 00       		.byte	0
+ 1520 0668 0A       		.uleb128 0xa
+ 1521 0669 92000000 		.4byte	.LVL76
+ 1522 066d 55080000 		.4byte	0x855
+ 1523 0671 0D       		.uleb128 0xd
+ 1524 0672 D4000000 		.4byte	.LVL88
+ 1525 0676 6E080000 		.4byte	0x86e
+ 1526 067a 0C       		.uleb128 0xc
+ 1527 067b 01       		.uleb128 0x1
+ 1528 067c 50       		.byte	0x50
+ 1529 067d 05       		.uleb128 0x5
+ 1530 067e 91       		.byte	0x91
+ 1531 067f BC7F     		.sleb128 -68
+ 1532 0681 94       		.byte	0x94
+ 1533 0682 02       		.byte	0x2
+ 1534 0683 00       		.byte	0
+ 1535 0684 00       		.byte	0
+ 1536 0685 0A       		.uleb128 0xa
+ 1537 0686 4C000000 		.4byte	.LVL68
+ 1538 068a 60080000 		.4byte	0x860
+ 1539 068e 0B       		.uleb128 0xb
+ 1540 068f 5C000000 		.4byte	.LVL69
+ 1541 0693 14040000 		.4byte	0x414
+ 1542 0697 A7060000 		.4byte	0x6a7
+ 1543 069b 0C       		.uleb128 0xc
+ 1544 069c 01       		.uleb128 0x1
+ 1545 069d 51       		.byte	0x51
+ 1546 069e 01       		.uleb128 0x1
+ 1547 069f 38       		.byte	0x38
+ 1548 06a0 0C       		.uleb128 0xc
+ 1549 06a1 01       		.uleb128 0x1
+ 1550 06a2 50       		.byte	0x50
+ 1551 06a3 02       		.uleb128 0x2
+ 1552 06a4 08       		.byte	0x8
+ 1553 06a5 2D       		.byte	0x2d
+ 1554 06a6 00       		.byte	0
+ 1555 06a7 0B       		.uleb128 0xb
+ 1556 06a8 62000000 		.4byte	.LVL70
+ 1557 06ac AB070000 		.4byte	0x7ab
+ 1558 06b0 BB060000 		.4byte	0x6bb
+ 1559 06b4 0C       		.uleb128 0xc
+ 1560 06b5 01       		.uleb128 0x1
+ 1561 06b6 50       		.byte	0x50
+ 1562 06b7 02       		.uleb128 0x2
+ 1563 06b8 08       		.byte	0x8
+ 1564 06b9 28       		.byte	0x28
+ 1565 06ba 00       		.byte	0
+ 1566 06bb 0B       		.uleb128 0xb
+ 1567 06bc E4000000 		.4byte	.LVL91
+ 1568 06c0 14040000 		.4byte	0x414
+ 1569 06c4 D4060000 		.4byte	0x6d4
+ 1570 06c8 0C       		.uleb128 0xc
+ 1571 06c9 01       		.uleb128 0x1
+ 1572 06ca 51       		.byte	0x51
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 34
+
+
+ 1573 06cb 01       		.uleb128 0x1
+ 1574 06cc 30       		.byte	0x30
+ 1575 06cd 0C       		.uleb128 0xc
+ 1576 06ce 01       		.uleb128 0x1
+ 1577 06cf 50       		.byte	0x50
+ 1578 06d0 02       		.uleb128 0x2
+ 1579 06d1 08       		.byte	0x8
+ 1580 06d2 2D       		.byte	0x2d
+ 1581 06d3 00       		.byte	0
+ 1582 06d4 0A       		.uleb128 0xa
+ 1583 06d5 E8000000 		.4byte	.LVL92
+ 1584 06d9 67080000 		.4byte	0x867
+ 1585 06dd 0A       		.uleb128 0xa
+ 1586 06de FC000000 		.4byte	.LVL96
+ 1587 06e2 74070000 		.4byte	0x774
+ 1588 06e6 0A       		.uleb128 0xa
+ 1589 06e7 18010000 		.4byte	.LVL101
+ 1590 06eb 74070000 		.4byte	0x774
+ 1591 06ef 0A       		.uleb128 0xa
+ 1592 06f0 34010000 		.4byte	.LVL106
+ 1593 06f4 74070000 		.4byte	0x774
+ 1594 06f8 00       		.byte	0
+ 1595 06f9 06       		.uleb128 0x6
+ 1596 06fa 04       		.byte	0x4
+ 1597 06fb 76000000 		.4byte	0x76
+ 1598 06ff 19       		.uleb128 0x19
+ 1599 0700 7D030000 		.4byte	.LASF47
+ 1600 0704 03       		.byte	0x3
+ 1601 0705 18       		.byte	0x18
+ 1602 0706 10070000 		.4byte	0x710
+ 1603 070a 1A       		.uleb128 0x1a
+ 1604 070b B7000000 		.4byte	0xb7
+ 1605 070f 00       		.byte	0
+ 1606 0710 19       		.uleb128 0x19
+ 1607 0711 94020000 		.4byte	.LASF48
+ 1608 0715 04       		.byte	0x4
+ 1609 0716 33       		.byte	0x33
+ 1610 0717 26070000 		.4byte	0x726
+ 1611 071b 1A       		.uleb128 0x1a
+ 1612 071c 81000000 		.4byte	0x81
+ 1613 0720 1A       		.uleb128 0x1a
+ 1614 0721 81000000 		.4byte	0x81
+ 1615 0725 00       		.byte	0
+ 1616 0726 19       		.uleb128 0x19
+ 1617 0727 7A040000 		.4byte	.LASF49
+ 1618 072b 04       		.byte	0x4
+ 1619 072c 3C       		.byte	0x3c
+ 1620 072d 3C070000 		.4byte	0x73c
+ 1621 0731 1A       		.uleb128 0x1a
+ 1622 0732 81000000 		.4byte	0x81
+ 1623 0736 1A       		.uleb128 0x1a
+ 1624 0737 81000000 		.4byte	0x81
+ 1625 073b 00       		.byte	0
+ 1626 073c 19       		.uleb128 0x19
+ 1627 073d 06010000 		.4byte	.LASF50
+ 1628 0741 04       		.byte	0x4
+ 1629 0742 36       		.byte	0x36
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 35
+
+
+ 1630 0743 52070000 		.4byte	0x752
+ 1631 0747 1A       		.uleb128 0x1a
+ 1632 0748 81000000 		.4byte	0x81
+ 1633 074c 1A       		.uleb128 0x1a
+ 1634 074d 81000000 		.4byte	0x81
+ 1635 0751 00       		.byte	0
+ 1636 0752 19       		.uleb128 0x19
+ 1637 0753 4A030000 		.4byte	.LASF51
+ 1638 0757 04       		.byte	0x4
+ 1639 0758 3A       		.byte	0x3a
+ 1640 0759 63070000 		.4byte	0x763
+ 1641 075d 1A       		.uleb128 0x1a
+ 1642 075e 81000000 		.4byte	0x81
+ 1643 0762 00       		.byte	0
+ 1644 0763 19       		.uleb128 0x19
+ 1645 0764 06000000 		.4byte	.LASF52
+ 1646 0768 04       		.byte	0x4
+ 1647 0769 38       		.byte	0x38
+ 1648 076a 74070000 		.4byte	0x774
+ 1649 076e 1A       		.uleb128 0x1a
+ 1650 076f 81000000 		.4byte	0x81
+ 1651 0773 00       		.byte	0
+ 1652 0774 1B       		.uleb128 0x1b
+ 1653 0775 FD030000 		.4byte	.LASF60
+ 1654 0779 09       		.byte	0x9
+ 1655 077a 86       		.byte	0x86
+ 1656 077b A9000000 		.4byte	0xa9
+ 1657 077f 89070000 		.4byte	0x789
+ 1658 0783 1A       		.uleb128 0x1a
+ 1659 0784 A9000000 		.4byte	0xa9
+ 1660 0788 00       		.byte	0
+ 1661 0789 19       		.uleb128 0x19
+ 1662 078a B8000000 		.4byte	.LASF53
+ 1663 078e 05       		.byte	0x5
+ 1664 078f 1E       		.byte	0x1e
+ 1665 0790 9A070000 		.4byte	0x79a
+ 1666 0794 1A       		.uleb128 0x1a
+ 1667 0795 6B000000 		.4byte	0x6b
+ 1668 0799 00       		.byte	0
+ 1669 079a 19       		.uleb128 0x19
+ 1670 079b E0030000 		.4byte	.LASF54
+ 1671 079f 05       		.byte	0x5
+ 1672 07a0 1D       		.byte	0x1d
+ 1673 07a1 AB070000 		.4byte	0x7ab
+ 1674 07a5 1A       		.uleb128 0x1a
+ 1675 07a6 6B000000 		.4byte	0x6b
+ 1676 07aa 00       		.byte	0
+ 1677 07ab 19       		.uleb128 0x19
+ 1678 07ac 59040000 		.4byte	.LASF55
+ 1679 07b0 06       		.byte	0x6
+ 1680 07b1 57       		.byte	0x57
+ 1681 07b2 BC070000 		.4byte	0x7bc
+ 1682 07b6 1A       		.uleb128 0x1a
+ 1683 07b7 81000000 		.4byte	0x81
+ 1684 07bb 00       		.byte	0
+ 1685 07bc 19       		.uleb128 0x19
+ 1686 07bd 02040000 		.4byte	.LASF56
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 36
+
+
+ 1687 07c1 07       		.byte	0x7
+ 1688 07c2 1E       		.byte	0x1e
+ 1689 07c3 CD070000 		.4byte	0x7cd
+ 1690 07c7 1A       		.uleb128 0x1a
+ 1691 07c8 6B000000 		.4byte	0x6b
+ 1692 07cc 00       		.byte	0
+ 1693 07cd 1C       		.uleb128 0x1c
+ 1694 07ce 8D010000 		.4byte	.LASF58
+ 1695 07d2 08       		.byte	0x8
+ 1696 07d3 54       		.byte	0x54
+ 1697 07d4 19       		.uleb128 0x19
+ 1698 07d5 36040000 		.4byte	.LASF57
+ 1699 07d9 08       		.byte	0x8
+ 1700 07da 8C       		.byte	0x8c
+ 1701 07db EA070000 		.4byte	0x7ea
+ 1702 07df 1A       		.uleb128 0x1a
+ 1703 07e0 EA070000 		.4byte	0x7ea
+ 1704 07e4 1A       		.uleb128 0x1a
+ 1705 07e5 6B000000 		.4byte	0x6b
+ 1706 07e9 00       		.byte	0
+ 1707 07ea 06       		.uleb128 0x6
+ 1708 07eb 04       		.byte	0x4
+ 1709 07ec F0070000 		.4byte	0x7f0
+ 1710 07f0 1D       		.uleb128 0x1d
+ 1711 07f1 6B000000 		.4byte	0x6b
+ 1712 07f5 1E       		.uleb128 0x1e
+ 1713 07f6 8B040000 		.4byte	.LASF63
+ 1714 07fa 08       		.byte	0x8
+ 1715 07fb 92       		.byte	0x92
+ 1716 07fc 6B000000 		.4byte	0x6b
+ 1717 0800 1C       		.uleb128 0x1c
+ 1718 0801 5C010000 		.4byte	.LASF59
+ 1719 0805 08       		.byte	0x8
+ 1720 0806 5D       		.byte	0x5d
+ 1721 0807 1B       		.uleb128 0x1b
+ 1722 0808 F5020000 		.4byte	.LASF61
+ 1723 080c 0A       		.byte	0xa
+ 1724 080d C4       		.byte	0xc4
+ 1725 080e 81000000 		.4byte	0x81
+ 1726 0812 2B080000 		.4byte	0x82b
+ 1727 0816 1A       		.uleb128 0x1a
+ 1728 0817 81000000 		.4byte	0x81
+ 1729 081b 1A       		.uleb128 0x1a
+ 1730 081c 2B080000 		.4byte	0x82b
+ 1731 0820 1A       		.uleb128 0x1a
+ 1732 0821 81000000 		.4byte	0x81
+ 1733 0825 1A       		.uleb128 0x1a
+ 1734 0826 81000000 		.4byte	0x81
+ 1735 082a 00       		.byte	0
+ 1736 082b 06       		.uleb128 0x6
+ 1737 082c 04       		.byte	0x4
+ 1738 082d 6B000000 		.4byte	0x6b
+ 1739 0831 1B       		.uleb128 0x1b
+ 1740 0832 16040000 		.4byte	.LASF62
+ 1741 0836 0A       		.byte	0xa
+ 1742 0837 C5       		.byte	0xc5
+ 1743 0838 81000000 		.4byte	0x81
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 37
+
+
+ 1744 083c 55080000 		.4byte	0x855
+ 1745 0840 1A       		.uleb128 0x1a
+ 1746 0841 81000000 		.4byte	0x81
+ 1747 0845 1A       		.uleb128 0x1a
+ 1748 0846 2B080000 		.4byte	0x82b
+ 1749 084a 1A       		.uleb128 0x1a
+ 1750 084b 81000000 		.4byte	0x81
+ 1751 084f 1A       		.uleb128 0x1a
+ 1752 0850 81000000 		.4byte	0x81
+ 1753 0854 00       		.byte	0
+ 1754 0855 1E       		.uleb128 0x1e
+ 1755 0856 61040000 		.4byte	.LASF64
+ 1756 085a 0A       		.byte	0xa
+ 1757 085b C0       		.byte	0xc0
+ 1758 085c 81000000 		.4byte	0x81
+ 1759 0860 1C       		.uleb128 0x1c
+ 1760 0861 E8000000 		.4byte	.LASF65
+ 1761 0865 0B       		.byte	0xb
+ 1762 0866 68       		.byte	0x68
+ 1763 0867 1C       		.uleb128 0x1c
+ 1764 0868 5D030000 		.4byte	.LASF66
+ 1765 086c 0B       		.byte	0xb
+ 1766 086d 69       		.byte	0x69
+ 1767 086e 1F       		.uleb128 0x1f
+ 1768 086f 52020000 		.4byte	.LASF70
+ 1769 0873 06       		.byte	0x6
+ 1770 0874 58       		.byte	0x58
+ 1771 0875 1A       		.uleb128 0x1a
+ 1772 0876 76000000 		.4byte	0x76
+ 1773 087a 00       		.byte	0
+ 1774 087b 00       		.byte	0
+ 1775              		.section	.debug_abbrev,"",%progbits
+ 1776              	.Ldebug_abbrev0:
+ 1777 0000 01       		.uleb128 0x1
+ 1778 0001 11       		.uleb128 0x11
+ 1779 0002 01       		.byte	0x1
+ 1780 0003 25       		.uleb128 0x25
+ 1781 0004 0E       		.uleb128 0xe
+ 1782 0005 13       		.uleb128 0x13
+ 1783 0006 0B       		.uleb128 0xb
+ 1784 0007 03       		.uleb128 0x3
+ 1785 0008 0E       		.uleb128 0xe
+ 1786 0009 1B       		.uleb128 0x1b
+ 1787 000a 0E       		.uleb128 0xe
+ 1788 000b 55       		.uleb128 0x55
+ 1789 000c 17       		.uleb128 0x17
+ 1790 000d 11       		.uleb128 0x11
+ 1791 000e 01       		.uleb128 0x1
+ 1792 000f 10       		.uleb128 0x10
+ 1793 0010 17       		.uleb128 0x17
+ 1794 0011 00       		.byte	0
+ 1795 0012 00       		.byte	0
+ 1796 0013 02       		.uleb128 0x2
+ 1797 0014 24       		.uleb128 0x24
+ 1798 0015 00       		.byte	0
+ 1799 0016 0B       		.uleb128 0xb
+ 1800 0017 0B       		.uleb128 0xb
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 38
+
+
+ 1801 0018 3E       		.uleb128 0x3e
+ 1802 0019 0B       		.uleb128 0xb
+ 1803 001a 03       		.uleb128 0x3
+ 1804 001b 0E       		.uleb128 0xe
+ 1805 001c 00       		.byte	0
+ 1806 001d 00       		.byte	0
+ 1807 001e 03       		.uleb128 0x3
+ 1808 001f 24       		.uleb128 0x24
+ 1809 0020 00       		.byte	0
+ 1810 0021 0B       		.uleb128 0xb
+ 1811 0022 0B       		.uleb128 0xb
+ 1812 0023 3E       		.uleb128 0x3e
+ 1813 0024 0B       		.uleb128 0xb
+ 1814 0025 03       		.uleb128 0x3
+ 1815 0026 08       		.uleb128 0x8
+ 1816 0027 00       		.byte	0
+ 1817 0028 00       		.byte	0
+ 1818 0029 04       		.uleb128 0x4
+ 1819 002a 16       		.uleb128 0x16
+ 1820 002b 00       		.byte	0
+ 1821 002c 03       		.uleb128 0x3
+ 1822 002d 0E       		.uleb128 0xe
+ 1823 002e 3A       		.uleb128 0x3a
+ 1824 002f 0B       		.uleb128 0xb
+ 1825 0030 3B       		.uleb128 0x3b
+ 1826 0031 0B       		.uleb128 0xb
+ 1827 0032 49       		.uleb128 0x49
+ 1828 0033 13       		.uleb128 0x13
+ 1829 0034 00       		.byte	0
+ 1830 0035 00       		.byte	0
+ 1831 0036 05       		.uleb128 0x5
+ 1832 0037 16       		.uleb128 0x16
+ 1833 0038 00       		.byte	0
+ 1834 0039 03       		.uleb128 0x3
+ 1835 003a 0E       		.uleb128 0xe
+ 1836 003b 3A       		.uleb128 0x3a
+ 1837 003c 0B       		.uleb128 0xb
+ 1838 003d 3B       		.uleb128 0x3b
+ 1839 003e 05       		.uleb128 0x5
+ 1840 003f 49       		.uleb128 0x49
+ 1841 0040 13       		.uleb128 0x13
+ 1842 0041 00       		.byte	0
+ 1843 0042 00       		.byte	0
+ 1844 0043 06       		.uleb128 0x6
+ 1845 0044 0F       		.uleb128 0xf
+ 1846 0045 00       		.byte	0
+ 1847 0046 0B       		.uleb128 0xb
+ 1848 0047 0B       		.uleb128 0xb
+ 1849 0048 49       		.uleb128 0x49
+ 1850 0049 13       		.uleb128 0x13
+ 1851 004a 00       		.byte	0
+ 1852 004b 00       		.byte	0
+ 1853 004c 07       		.uleb128 0x7
+ 1854 004d 15       		.uleb128 0x15
+ 1855 004e 00       		.byte	0
+ 1856 004f 27       		.uleb128 0x27
+ 1857 0050 19       		.uleb128 0x19
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 39
+
+
+ 1858 0051 00       		.byte	0
+ 1859 0052 00       		.byte	0
+ 1860 0053 08       		.uleb128 0x8
+ 1861 0054 2E       		.uleb128 0x2e
+ 1862 0055 01       		.byte	0x1
+ 1863 0056 3F       		.uleb128 0x3f
+ 1864 0057 19       		.uleb128 0x19
+ 1865 0058 03       		.uleb128 0x3
+ 1866 0059 0E       		.uleb128 0xe
+ 1867 005a 3A       		.uleb128 0x3a
+ 1868 005b 0B       		.uleb128 0xb
+ 1869 005c 3B       		.uleb128 0x3b
+ 1870 005d 0B       		.uleb128 0xb
+ 1871 005e 27       		.uleb128 0x27
+ 1872 005f 19       		.uleb128 0x19
+ 1873 0060 11       		.uleb128 0x11
+ 1874 0061 01       		.uleb128 0x1
+ 1875 0062 12       		.uleb128 0x12
+ 1876 0063 06       		.uleb128 0x6
+ 1877 0064 40       		.uleb128 0x40
+ 1878 0065 18       		.uleb128 0x18
+ 1879 0066 9742     		.uleb128 0x2117
+ 1880 0068 19       		.uleb128 0x19
+ 1881 0069 01       		.uleb128 0x1
+ 1882 006a 13       		.uleb128 0x13
+ 1883 006b 00       		.byte	0
+ 1884 006c 00       		.byte	0
+ 1885 006d 09       		.uleb128 0x9
+ 1886 006e 05       		.uleb128 0x5
+ 1887 006f 00       		.byte	0
+ 1888 0070 03       		.uleb128 0x3
+ 1889 0071 0E       		.uleb128 0xe
+ 1890 0072 3A       		.uleb128 0x3a
+ 1891 0073 0B       		.uleb128 0xb
+ 1892 0074 3B       		.uleb128 0x3b
+ 1893 0075 0B       		.uleb128 0xb
+ 1894 0076 49       		.uleb128 0x49
+ 1895 0077 13       		.uleb128 0x13
+ 1896 0078 02       		.uleb128 0x2
+ 1897 0079 17       		.uleb128 0x17
+ 1898 007a 00       		.byte	0
+ 1899 007b 00       		.byte	0
+ 1900 007c 0A       		.uleb128 0xa
+ 1901 007d 898201   		.uleb128 0x4109
+ 1902 0080 00       		.byte	0
+ 1903 0081 11       		.uleb128 0x11
+ 1904 0082 01       		.uleb128 0x1
+ 1905 0083 31       		.uleb128 0x31
+ 1906 0084 13       		.uleb128 0x13
+ 1907 0085 00       		.byte	0
+ 1908 0086 00       		.byte	0
+ 1909 0087 0B       		.uleb128 0xb
+ 1910 0088 898201   		.uleb128 0x4109
+ 1911 008b 01       		.byte	0x1
+ 1912 008c 11       		.uleb128 0x11
+ 1913 008d 01       		.uleb128 0x1
+ 1914 008e 31       		.uleb128 0x31
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 40
+
+
+ 1915 008f 13       		.uleb128 0x13
+ 1916 0090 01       		.uleb128 0x1
+ 1917 0091 13       		.uleb128 0x13
+ 1918 0092 00       		.byte	0
+ 1919 0093 00       		.byte	0
+ 1920 0094 0C       		.uleb128 0xc
+ 1921 0095 8A8201   		.uleb128 0x410a
+ 1922 0098 00       		.byte	0
+ 1923 0099 02       		.uleb128 0x2
+ 1924 009a 18       		.uleb128 0x18
+ 1925 009b 9142     		.uleb128 0x2111
+ 1926 009d 18       		.uleb128 0x18
+ 1927 009e 00       		.byte	0
+ 1928 009f 00       		.byte	0
+ 1929 00a0 0D       		.uleb128 0xd
+ 1930 00a1 898201   		.uleb128 0x4109
+ 1931 00a4 01       		.byte	0x1
+ 1932 00a5 11       		.uleb128 0x11
+ 1933 00a6 01       		.uleb128 0x1
+ 1934 00a7 31       		.uleb128 0x31
+ 1935 00a8 13       		.uleb128 0x13
+ 1936 00a9 00       		.byte	0
+ 1937 00aa 00       		.byte	0
+ 1938 00ab 0E       		.uleb128 0xe
+ 1939 00ac 2E       		.uleb128 0x2e
+ 1940 00ad 01       		.byte	0x1
+ 1941 00ae 3F       		.uleb128 0x3f
+ 1942 00af 19       		.uleb128 0x19
+ 1943 00b0 03       		.uleb128 0x3
+ 1944 00b1 0E       		.uleb128 0xe
+ 1945 00b2 3A       		.uleb128 0x3a
+ 1946 00b3 0B       		.uleb128 0xb
+ 1947 00b4 3B       		.uleb128 0x3b
+ 1948 00b5 0B       		.uleb128 0xb
+ 1949 00b6 27       		.uleb128 0x27
+ 1950 00b7 19       		.uleb128 0x19
+ 1951 00b8 49       		.uleb128 0x49
+ 1952 00b9 13       		.uleb128 0x13
+ 1953 00ba 11       		.uleb128 0x11
+ 1954 00bb 01       		.uleb128 0x1
+ 1955 00bc 12       		.uleb128 0x12
+ 1956 00bd 06       		.uleb128 0x6
+ 1957 00be 40       		.uleb128 0x40
+ 1958 00bf 18       		.uleb128 0x18
+ 1959 00c0 9642     		.uleb128 0x2116
+ 1960 00c2 19       		.uleb128 0x19
+ 1961 00c3 01       		.uleb128 0x1
+ 1962 00c4 13       		.uleb128 0x13
+ 1963 00c5 00       		.byte	0
+ 1964 00c6 00       		.byte	0
+ 1965 00c7 0F       		.uleb128 0xf
+ 1966 00c8 05       		.uleb128 0x5
+ 1967 00c9 00       		.byte	0
+ 1968 00ca 03       		.uleb128 0x3
+ 1969 00cb 08       		.uleb128 0x8
+ 1970 00cc 3A       		.uleb128 0x3a
+ 1971 00cd 0B       		.uleb128 0xb
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 41
+
+
+ 1972 00ce 3B       		.uleb128 0x3b
+ 1973 00cf 0B       		.uleb128 0xb
+ 1974 00d0 49       		.uleb128 0x49
+ 1975 00d1 13       		.uleb128 0x13
+ 1976 00d2 02       		.uleb128 0x2
+ 1977 00d3 17       		.uleb128 0x17
+ 1978 00d4 00       		.byte	0
+ 1979 00d5 00       		.byte	0
+ 1980 00d6 10       		.uleb128 0x10
+ 1981 00d7 34       		.uleb128 0x34
+ 1982 00d8 00       		.byte	0
+ 1983 00d9 03       		.uleb128 0x3
+ 1984 00da 0E       		.uleb128 0xe
+ 1985 00db 3A       		.uleb128 0x3a
+ 1986 00dc 0B       		.uleb128 0xb
+ 1987 00dd 3B       		.uleb128 0x3b
+ 1988 00de 0B       		.uleb128 0xb
+ 1989 00df 49       		.uleb128 0x49
+ 1990 00e0 13       		.uleb128 0x13
+ 1991 00e1 02       		.uleb128 0x2
+ 1992 00e2 18       		.uleb128 0x18
+ 1993 00e3 00       		.byte	0
+ 1994 00e4 00       		.byte	0
+ 1995 00e5 11       		.uleb128 0x11
+ 1996 00e6 01       		.uleb128 0x1
+ 1997 00e7 01       		.byte	0x1
+ 1998 00e8 49       		.uleb128 0x49
+ 1999 00e9 13       		.uleb128 0x13
+ 2000 00ea 01       		.uleb128 0x1
+ 2001 00eb 13       		.uleb128 0x13
+ 2002 00ec 00       		.byte	0
+ 2003 00ed 00       		.byte	0
+ 2004 00ee 12       		.uleb128 0x12
+ 2005 00ef 21       		.uleb128 0x21
+ 2006 00f0 00       		.byte	0
+ 2007 00f1 49       		.uleb128 0x49
+ 2008 00f2 13       		.uleb128 0x13
+ 2009 00f3 2F       		.uleb128 0x2f
+ 2010 00f4 0B       		.uleb128 0xb
+ 2011 00f5 00       		.byte	0
+ 2012 00f6 00       		.byte	0
+ 2013 00f7 13       		.uleb128 0x13
+ 2014 00f8 2E       		.uleb128 0x2e
+ 2015 00f9 01       		.byte	0x1
+ 2016 00fa 3F       		.uleb128 0x3f
+ 2017 00fb 19       		.uleb128 0x19
+ 2018 00fc 03       		.uleb128 0x3
+ 2019 00fd 0E       		.uleb128 0xe
+ 2020 00fe 3A       		.uleb128 0x3a
+ 2021 00ff 0B       		.uleb128 0xb
+ 2022 0100 3B       		.uleb128 0x3b
+ 2023 0101 0B       		.uleb128 0xb
+ 2024 0102 27       		.uleb128 0x27
+ 2025 0103 19       		.uleb128 0x19
+ 2026 0104 49       		.uleb128 0x49
+ 2027 0105 13       		.uleb128 0x13
+ 2028 0106 11       		.uleb128 0x11
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 42
+
+
+ 2029 0107 01       		.uleb128 0x1
+ 2030 0108 12       		.uleb128 0x12
+ 2031 0109 06       		.uleb128 0x6
+ 2032 010a 40       		.uleb128 0x40
+ 2033 010b 18       		.uleb128 0x18
+ 2034 010c 9742     		.uleb128 0x2117
+ 2035 010e 19       		.uleb128 0x19
+ 2036 010f 01       		.uleb128 0x1
+ 2037 0110 13       		.uleb128 0x13
+ 2038 0111 00       		.byte	0
+ 2039 0112 00       		.byte	0
+ 2040 0113 14       		.uleb128 0x14
+ 2041 0114 34       		.uleb128 0x34
+ 2042 0115 00       		.byte	0
+ 2043 0116 03       		.uleb128 0x3
+ 2044 0117 08       		.uleb128 0x8
+ 2045 0118 3A       		.uleb128 0x3a
+ 2046 0119 0B       		.uleb128 0xb
+ 2047 011a 3B       		.uleb128 0x3b
+ 2048 011b 0B       		.uleb128 0xb
+ 2049 011c 49       		.uleb128 0x49
+ 2050 011d 13       		.uleb128 0x13
+ 2051 011e 02       		.uleb128 0x2
+ 2052 011f 17       		.uleb128 0x17
+ 2053 0120 00       		.byte	0
+ 2054 0121 00       		.byte	0
+ 2055 0122 15       		.uleb128 0x15
+ 2056 0123 0B       		.uleb128 0xb
+ 2057 0124 01       		.byte	0x1
+ 2058 0125 11       		.uleb128 0x11
+ 2059 0126 01       		.uleb128 0x1
+ 2060 0127 12       		.uleb128 0x12
+ 2061 0128 06       		.uleb128 0x6
+ 2062 0129 01       		.uleb128 0x1
+ 2063 012a 13       		.uleb128 0x13
+ 2064 012b 00       		.byte	0
+ 2065 012c 00       		.byte	0
+ 2066 012d 16       		.uleb128 0x16
+ 2067 012e 34       		.uleb128 0x34
+ 2068 012f 00       		.byte	0
+ 2069 0130 03       		.uleb128 0x3
+ 2070 0131 0E       		.uleb128 0xe
+ 2071 0132 3A       		.uleb128 0x3a
+ 2072 0133 0B       		.uleb128 0xb
+ 2073 0134 3B       		.uleb128 0x3b
+ 2074 0135 05       		.uleb128 0x5
+ 2075 0136 49       		.uleb128 0x49
+ 2076 0137 13       		.uleb128 0x13
+ 2077 0138 02       		.uleb128 0x2
+ 2078 0139 18       		.uleb128 0x18
+ 2079 013a 00       		.byte	0
+ 2080 013b 00       		.byte	0
+ 2081 013c 17       		.uleb128 0x17
+ 2082 013d 2E       		.uleb128 0x2e
+ 2083 013e 01       		.byte	0x1
+ 2084 013f 3F       		.uleb128 0x3f
+ 2085 0140 19       		.uleb128 0x19
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 43
+
+
+ 2086 0141 03       		.uleb128 0x3
+ 2087 0142 0E       		.uleb128 0xe
+ 2088 0143 3A       		.uleb128 0x3a
+ 2089 0144 0B       		.uleb128 0xb
+ 2090 0145 3B       		.uleb128 0x3b
+ 2091 0146 0B       		.uleb128 0xb
+ 2092 0147 27       		.uleb128 0x27
+ 2093 0148 19       		.uleb128 0x19
+ 2094 0149 11       		.uleb128 0x11
+ 2095 014a 01       		.uleb128 0x1
+ 2096 014b 12       		.uleb128 0x12
+ 2097 014c 06       		.uleb128 0x6
+ 2098 014d 40       		.uleb128 0x40
+ 2099 014e 18       		.uleb128 0x18
+ 2100 014f 9642     		.uleb128 0x2116
+ 2101 0151 19       		.uleb128 0x19
+ 2102 0152 01       		.uleb128 0x1
+ 2103 0153 13       		.uleb128 0x13
+ 2104 0154 00       		.byte	0
+ 2105 0155 00       		.byte	0
+ 2106 0156 18       		.uleb128 0x18
+ 2107 0157 34       		.uleb128 0x34
+ 2108 0158 00       		.byte	0
+ 2109 0159 03       		.uleb128 0x3
+ 2110 015a 0E       		.uleb128 0xe
+ 2111 015b 3A       		.uleb128 0x3a
+ 2112 015c 0B       		.uleb128 0xb
+ 2113 015d 3B       		.uleb128 0x3b
+ 2114 015e 0B       		.uleb128 0xb
+ 2115 015f 49       		.uleb128 0x49
+ 2116 0160 13       		.uleb128 0x13
+ 2117 0161 02       		.uleb128 0x2
+ 2118 0162 17       		.uleb128 0x17
+ 2119 0163 00       		.byte	0
+ 2120 0164 00       		.byte	0
+ 2121 0165 19       		.uleb128 0x19
+ 2122 0166 2E       		.uleb128 0x2e
+ 2123 0167 01       		.byte	0x1
+ 2124 0168 3F       		.uleb128 0x3f
+ 2125 0169 19       		.uleb128 0x19
+ 2126 016a 03       		.uleb128 0x3
+ 2127 016b 0E       		.uleb128 0xe
+ 2128 016c 3A       		.uleb128 0x3a
+ 2129 016d 0B       		.uleb128 0xb
+ 2130 016e 3B       		.uleb128 0x3b
+ 2131 016f 0B       		.uleb128 0xb
+ 2132 0170 27       		.uleb128 0x27
+ 2133 0171 19       		.uleb128 0x19
+ 2134 0172 3C       		.uleb128 0x3c
+ 2135 0173 19       		.uleb128 0x19
+ 2136 0174 01       		.uleb128 0x1
+ 2137 0175 13       		.uleb128 0x13
+ 2138 0176 00       		.byte	0
+ 2139 0177 00       		.byte	0
+ 2140 0178 1A       		.uleb128 0x1a
+ 2141 0179 05       		.uleb128 0x5
+ 2142 017a 00       		.byte	0
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 44
+
+
+ 2143 017b 49       		.uleb128 0x49
+ 2144 017c 13       		.uleb128 0x13
+ 2145 017d 00       		.byte	0
+ 2146 017e 00       		.byte	0
+ 2147 017f 1B       		.uleb128 0x1b
+ 2148 0180 2E       		.uleb128 0x2e
+ 2149 0181 01       		.byte	0x1
+ 2150 0182 3F       		.uleb128 0x3f
+ 2151 0183 19       		.uleb128 0x19
+ 2152 0184 03       		.uleb128 0x3
+ 2153 0185 0E       		.uleb128 0xe
+ 2154 0186 3A       		.uleb128 0x3a
+ 2155 0187 0B       		.uleb128 0xb
+ 2156 0188 3B       		.uleb128 0x3b
+ 2157 0189 0B       		.uleb128 0xb
+ 2158 018a 27       		.uleb128 0x27
+ 2159 018b 19       		.uleb128 0x19
+ 2160 018c 49       		.uleb128 0x49
+ 2161 018d 13       		.uleb128 0x13
+ 2162 018e 3C       		.uleb128 0x3c
+ 2163 018f 19       		.uleb128 0x19
+ 2164 0190 01       		.uleb128 0x1
+ 2165 0191 13       		.uleb128 0x13
+ 2166 0192 00       		.byte	0
+ 2167 0193 00       		.byte	0
+ 2168 0194 1C       		.uleb128 0x1c
+ 2169 0195 2E       		.uleb128 0x2e
+ 2170 0196 00       		.byte	0
+ 2171 0197 3F       		.uleb128 0x3f
+ 2172 0198 19       		.uleb128 0x19
+ 2173 0199 03       		.uleb128 0x3
+ 2174 019a 0E       		.uleb128 0xe
+ 2175 019b 3A       		.uleb128 0x3a
+ 2176 019c 0B       		.uleb128 0xb
+ 2177 019d 3B       		.uleb128 0x3b
+ 2178 019e 0B       		.uleb128 0xb
+ 2179 019f 27       		.uleb128 0x27
+ 2180 01a0 19       		.uleb128 0x19
+ 2181 01a1 3C       		.uleb128 0x3c
+ 2182 01a2 19       		.uleb128 0x19
+ 2183 01a3 00       		.byte	0
+ 2184 01a4 00       		.byte	0
+ 2185 01a5 1D       		.uleb128 0x1d
+ 2186 01a6 26       		.uleb128 0x26
+ 2187 01a7 00       		.byte	0
+ 2188 01a8 49       		.uleb128 0x49
+ 2189 01a9 13       		.uleb128 0x13
+ 2190 01aa 00       		.byte	0
+ 2191 01ab 00       		.byte	0
+ 2192 01ac 1E       		.uleb128 0x1e
+ 2193 01ad 2E       		.uleb128 0x2e
+ 2194 01ae 00       		.byte	0
+ 2195 01af 3F       		.uleb128 0x3f
+ 2196 01b0 19       		.uleb128 0x19
+ 2197 01b1 03       		.uleb128 0x3
+ 2198 01b2 0E       		.uleb128 0xe
+ 2199 01b3 3A       		.uleb128 0x3a
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 45
+
+
+ 2200 01b4 0B       		.uleb128 0xb
+ 2201 01b5 3B       		.uleb128 0x3b
+ 2202 01b6 0B       		.uleb128 0xb
+ 2203 01b7 27       		.uleb128 0x27
+ 2204 01b8 19       		.uleb128 0x19
+ 2205 01b9 49       		.uleb128 0x49
+ 2206 01ba 13       		.uleb128 0x13
+ 2207 01bb 3C       		.uleb128 0x3c
+ 2208 01bc 19       		.uleb128 0x19
+ 2209 01bd 00       		.byte	0
+ 2210 01be 00       		.byte	0
+ 2211 01bf 1F       		.uleb128 0x1f
+ 2212 01c0 2E       		.uleb128 0x2e
+ 2213 01c1 01       		.byte	0x1
+ 2214 01c2 3F       		.uleb128 0x3f
+ 2215 01c3 19       		.uleb128 0x19
+ 2216 01c4 03       		.uleb128 0x3
+ 2217 01c5 0E       		.uleb128 0xe
+ 2218 01c6 3A       		.uleb128 0x3a
+ 2219 01c7 0B       		.uleb128 0xb
+ 2220 01c8 3B       		.uleb128 0x3b
+ 2221 01c9 0B       		.uleb128 0xb
+ 2222 01ca 27       		.uleb128 0x27
+ 2223 01cb 19       		.uleb128 0x19
+ 2224 01cc 3C       		.uleb128 0x3c
+ 2225 01cd 19       		.uleb128 0x19
+ 2226 01ce 00       		.byte	0
+ 2227 01cf 00       		.byte	0
+ 2228 01d0 00       		.byte	0
+ 2229              		.section	.debug_loc,"",%progbits
+ 2230              	.Ldebug_loc0:
+ 2231              	.LLST0:
+ 2232 0000 00000000 		.4byte	.LVL0
+ 2233 0004 06000000 		.4byte	.LVL1
+ 2234 0008 0100     		.2byte	0x1
+ 2235 000a 50       		.byte	0x50
+ 2236 000b 06000000 		.4byte	.LVL1
+ 2237 000f 50000000 		.4byte	.LFE34
+ 2238 0013 0400     		.2byte	0x4
+ 2239 0015 F3       		.byte	0xf3
+ 2240 0016 01       		.uleb128 0x1
+ 2241 0017 50       		.byte	0x50
+ 2242 0018 9F       		.byte	0x9f
+ 2243 0019 00000000 		.4byte	0
+ 2244 001d 00000000 		.4byte	0
+ 2245              	.LLST1:
+ 2246 0021 00000000 		.4byte	.LVL11
+ 2247 0025 04000000 		.4byte	.LVL12
+ 2248 0029 0100     		.2byte	0x1
+ 2249 002b 50       		.byte	0x50
+ 2250 002c 04000000 		.4byte	.LVL12
+ 2251 0030 1E000000 		.4byte	.LFE36
+ 2252 0034 0400     		.2byte	0x4
+ 2253 0036 F3       		.byte	0xf3
+ 2254 0037 01       		.uleb128 0x1
+ 2255 0038 50       		.byte	0x50
+ 2256 0039 9F       		.byte	0x9f
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 46
+
+
+ 2257 003a 00000000 		.4byte	0
+ 2258 003e 00000000 		.4byte	0
+ 2259              	.LLST2:
+ 2260 0042 00000000 		.4byte	.LVL11
+ 2261 0046 06000000 		.4byte	.LVL13
+ 2262 004a 0100     		.2byte	0x1
+ 2263 004c 51       		.byte	0x51
+ 2264 004d 06000000 		.4byte	.LVL13
+ 2265 0051 1E000000 		.4byte	.LFE36
+ 2266 0055 0400     		.2byte	0x4
+ 2267 0057 F3       		.byte	0xf3
+ 2268 0058 01       		.uleb128 0x1
+ 2269 0059 51       		.byte	0x51
+ 2270 005a 9F       		.byte	0x9f
+ 2271 005b 00000000 		.4byte	0
+ 2272 005f 00000000 		.4byte	0
+ 2273              	.LLST3:
+ 2274 0063 00000000 		.4byte	.LVL11
+ 2275 0067 0A000000 		.4byte	.LVL14
+ 2276 006b 0100     		.2byte	0x1
+ 2277 006d 52       		.byte	0x52
+ 2278 006e 0A000000 		.4byte	.LVL14
+ 2279 0072 1E000000 		.4byte	.LFE36
+ 2280 0076 0400     		.2byte	0x4
+ 2281 0078 F3       		.byte	0xf3
+ 2282 0079 01       		.uleb128 0x1
+ 2283 007a 52       		.byte	0x52
+ 2284 007b 9F       		.byte	0x9f
+ 2285 007c 00000000 		.4byte	0
+ 2286 0080 00000000 		.4byte	0
+ 2287              	.LLST4:
+ 2288 0084 00000000 		.4byte	.LVL18
+ 2289 0088 14000000 		.4byte	.LVL20
+ 2290 008c 0100     		.2byte	0x1
+ 2291 008e 50       		.byte	0x50
+ 2292 008f 14000000 		.4byte	.LVL20
+ 2293 0093 82000000 		.4byte	.LFE37
+ 2294 0097 0400     		.2byte	0x4
+ 2295 0099 F3       		.byte	0xf3
+ 2296 009a 01       		.uleb128 0x1
+ 2297 009b 50       		.byte	0x50
+ 2298 009c 9F       		.byte	0x9f
+ 2299 009d 00000000 		.4byte	0
+ 2300 00a1 00000000 		.4byte	0
+ 2301              	.LLST5:
+ 2302 00a5 00000000 		.4byte	.LVL18
+ 2303 00a9 20000000 		.4byte	.LVL21
+ 2304 00ad 0100     		.2byte	0x1
+ 2305 00af 51       		.byte	0x51
+ 2306 00b0 20000000 		.4byte	.LVL21
+ 2307 00b4 82000000 		.4byte	.LFE37
+ 2308 00b8 0400     		.2byte	0x4
+ 2309 00ba F3       		.byte	0xf3
+ 2310 00bb 01       		.uleb128 0x1
+ 2311 00bc 51       		.byte	0x51
+ 2312 00bd 9F       		.byte	0x9f
+ 2313 00be 00000000 		.4byte	0
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 47
+
+
+ 2314 00c2 00000000 		.4byte	0
+ 2315              	.LLST6:
+ 2316 00c6 00000000 		.4byte	.LVL18
+ 2317 00ca 2E000000 		.4byte	.LVL22
+ 2318 00ce 0100     		.2byte	0x1
+ 2319 00d0 52       		.byte	0x52
+ 2320 00d1 2E000000 		.4byte	.LVL22
+ 2321 00d5 82000000 		.4byte	.LFE37
+ 2322 00d9 0400     		.2byte	0x4
+ 2323 00db F3       		.byte	0xf3
+ 2324 00dc 01       		.uleb128 0x1
+ 2325 00dd 52       		.byte	0x52
+ 2326 00de 9F       		.byte	0x9f
+ 2327 00df 00000000 		.4byte	0
+ 2328 00e3 00000000 		.4byte	0
+ 2329              	.LLST7:
+ 2330 00e7 00000000 		.4byte	.LVL18
+ 2331 00eb 0E000000 		.4byte	.LVL19
+ 2332 00ef 0100     		.2byte	0x1
+ 2333 00f1 53       		.byte	0x53
+ 2334 00f2 0E000000 		.4byte	.LVL19
+ 2335 00f6 82000000 		.4byte	.LFE37
+ 2336 00fa 0400     		.2byte	0x4
+ 2337 00fc F3       		.byte	0xf3
+ 2338 00fd 01       		.uleb128 0x1
+ 2339 00fe 53       		.byte	0x53
+ 2340 00ff 9F       		.byte	0x9f
+ 2341 0100 00000000 		.4byte	0
+ 2342 0104 00000000 		.4byte	0
+ 2343              	.LLST8:
+ 2344 0108 00000000 		.4byte	.LVL36
+ 2345 010c 10000000 		.4byte	.LVL37
+ 2346 0110 0100     		.2byte	0x1
+ 2347 0112 50       		.byte	0x50
+ 2348 0113 10000000 		.4byte	.LVL37
+ 2349 0117 17000000 		.4byte	.LVL38-1
+ 2350 011b 0200     		.2byte	0x2
+ 2351 011d 71       		.byte	0x71
+ 2352 011e 00       		.sleb128 0
+ 2353 011f 17000000 		.4byte	.LVL38-1
+ 2354 0123 3C000000 		.4byte	.LFE38
+ 2355 0127 0400     		.2byte	0x4
+ 2356 0129 F3       		.byte	0xf3
+ 2357 012a 01       		.uleb128 0x1
+ 2358 012b 50       		.byte	0x50
+ 2359 012c 9F       		.byte	0x9f
+ 2360 012d 00000000 		.4byte	0
+ 2361 0131 00000000 		.4byte	0
+ 2362              	.LLST9:
+ 2363 0135 28000000 		.4byte	.LVL40
+ 2364 0139 2C000000 		.4byte	.LVL41
+ 2365 013d 0100     		.2byte	0x1
+ 2366 013f 50       		.byte	0x50
+ 2367 0140 00000000 		.4byte	0
+ 2368 0144 00000000 		.4byte	0
+ 2369              	.LLST10:
+ 2370 0148 00000000 		.4byte	.LVL43
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 48
+
+
+ 2371 014c 0C000000 		.4byte	.LVL44
+ 2372 0150 0100     		.2byte	0x1
+ 2373 0152 50       		.byte	0x50
+ 2374 0153 0C000000 		.4byte	.LVL44
+ 2375 0157 12000000 		.4byte	.LVL46
+ 2376 015b 0200     		.2byte	0x2
+ 2377 015d 73       		.byte	0x73
+ 2378 015e 00       		.sleb128 0
+ 2379 015f 12000000 		.4byte	.LVL46
+ 2380 0163 15000000 		.4byte	.LVL47-1
+ 2381 0167 0200     		.2byte	0x2
+ 2382 0169 71       		.byte	0x71
+ 2383 016a 00       		.sleb128 0
+ 2384 016b 15000000 		.4byte	.LVL47-1
+ 2385 016f 22000000 		.4byte	.LFE39
+ 2386 0173 0400     		.2byte	0x4
+ 2387 0175 F3       		.byte	0xf3
+ 2388 0176 01       		.uleb128 0x1
+ 2389 0177 50       		.byte	0x50
+ 2390 0178 9F       		.byte	0x9f
+ 2391 0179 00000000 		.4byte	0
+ 2392 017d 00000000 		.4byte	0
+ 2393              	.LLST11:
+ 2394 0181 00000000 		.4byte	.LVL43
+ 2395 0185 0E000000 		.4byte	.LVL45
+ 2396 0189 0100     		.2byte	0x1
+ 2397 018b 51       		.byte	0x51
+ 2398 018c 0E000000 		.4byte	.LVL45
+ 2399 0190 12000000 		.4byte	.LVL46
+ 2400 0194 0200     		.2byte	0x2
+ 2401 0196 73       		.byte	0x73
+ 2402 0197 01       		.sleb128 1
+ 2403 0198 12000000 		.4byte	.LVL46
+ 2404 019c 15000000 		.4byte	.LVL47-1
+ 2405 01a0 0200     		.2byte	0x2
+ 2406 01a2 71       		.byte	0x71
+ 2407 01a3 01       		.sleb128 1
+ 2408 01a4 15000000 		.4byte	.LVL47-1
+ 2409 01a8 22000000 		.4byte	.LFE39
+ 2410 01ac 0400     		.2byte	0x4
+ 2411 01ae F3       		.byte	0xf3
+ 2412 01af 01       		.uleb128 0x1
+ 2413 01b0 51       		.byte	0x51
+ 2414 01b1 9F       		.byte	0x9f
+ 2415 01b2 00000000 		.4byte	0
+ 2416 01b6 00000000 		.4byte	0
+ 2417              	.LLST12:
+ 2418 01ba 00000000 		.4byte	.LVL49
+ 2419 01be 0B000000 		.4byte	.LVL50-1
+ 2420 01c2 0100     		.2byte	0x1
+ 2421 01c4 50       		.byte	0x50
+ 2422 01c5 0B000000 		.4byte	.LVL50-1
+ 2423 01c9 28000000 		.4byte	.LVL56
+ 2424 01cd 0100     		.2byte	0x1
+ 2425 01cf 56       		.byte	0x56
+ 2426 01d0 28000000 		.4byte	.LVL56
+ 2427 01d4 2A000000 		.4byte	.LFE33
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 49
+
+
+ 2428 01d8 0400     		.2byte	0x4
+ 2429 01da F3       		.byte	0xf3
+ 2430 01db 01       		.uleb128 0x1
+ 2431 01dc 50       		.byte	0x50
+ 2432 01dd 9F       		.byte	0x9f
+ 2433 01de 00000000 		.4byte	0
+ 2434 01e2 00000000 		.4byte	0
+ 2435              	.LLST13:
+ 2436 01e6 00000000 		.4byte	.LVL49
+ 2437 01ea 0B000000 		.4byte	.LVL50-1
+ 2438 01ee 0100     		.2byte	0x1
+ 2439 01f0 51       		.byte	0x51
+ 2440 01f1 0B000000 		.4byte	.LVL50-1
+ 2441 01f5 0E000000 		.4byte	.LVL51
+ 2442 01f9 0100     		.2byte	0x1
+ 2443 01fb 54       		.byte	0x54
+ 2444 01fc 0E000000 		.4byte	.LVL51
+ 2445 0200 2A000000 		.4byte	.LFE33
+ 2446 0204 0400     		.2byte	0x4
+ 2447 0206 F3       		.byte	0xf3
+ 2448 0207 01       		.uleb128 0x1
+ 2449 0208 51       		.byte	0x51
+ 2450 0209 9F       		.byte	0x9f
+ 2451 020a 00000000 		.4byte	0
+ 2452 020e 00000000 		.4byte	0
+ 2453              	.LLST14:
+ 2454 0212 00000000 		.4byte	.LVL49
+ 2455 0216 0B000000 		.4byte	.LVL50-1
+ 2456 021a 0100     		.2byte	0x1
+ 2457 021c 52       		.byte	0x52
+ 2458 021d 0B000000 		.4byte	.LVL50-1
+ 2459 0221 28000000 		.4byte	.LVL55
+ 2460 0225 0100     		.2byte	0x1
+ 2461 0227 55       		.byte	0x55
+ 2462 0228 28000000 		.4byte	.LVL55
+ 2463 022c 2A000000 		.4byte	.LFE33
+ 2464 0230 0400     		.2byte	0x4
+ 2465 0232 F3       		.byte	0xf3
+ 2466 0233 01       		.uleb128 0x1
+ 2467 0234 52       		.byte	0x52
+ 2468 0235 9F       		.byte	0x9f
+ 2469 0236 00000000 		.4byte	0
+ 2470 023a 00000000 		.4byte	0
+ 2471              	.LLST15:
+ 2472 023e 00000000 		.4byte	.LVL57
+ 2473 0242 4B000000 		.4byte	.LVL68-1
+ 2474 0246 0100     		.2byte	0x1
+ 2475 0248 50       		.byte	0x50
+ 2476 0249 4B000000 		.4byte	.LVL68-1
+ 2477 024d 3E010000 		.4byte	.LVL109
+ 2478 0251 0100     		.2byte	0x1
+ 2479 0253 58       		.byte	0x58
+ 2480 0254 3E010000 		.4byte	.LVL109
+ 2481 0258 60010000 		.4byte	.LFE35
+ 2482 025c 0400     		.2byte	0x4
+ 2483 025e F3       		.byte	0xf3
+ 2484 025f 01       		.uleb128 0x1
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 50
+
+
+ 2485 0260 50       		.byte	0x50
+ 2486 0261 9F       		.byte	0x9f
+ 2487 0262 00000000 		.4byte	0
+ 2488 0266 00000000 		.4byte	0
+ 2489              	.LLST16:
+ 2490 026a 00000000 		.4byte	.LVL57
+ 2491 026e 4B000000 		.4byte	.LVL68-1
+ 2492 0272 0100     		.2byte	0x1
+ 2493 0274 51       		.byte	0x51
+ 2494 0275 4B000000 		.4byte	.LVL68-1
+ 2495 0279 60010000 		.4byte	.LFE35
+ 2496 027d 0200     		.2byte	0x2
+ 2497 027f 91       		.byte	0x91
+ 2498 0280 40       		.sleb128 -64
+ 2499 0281 00000000 		.4byte	0
+ 2500 0285 00000000 		.4byte	0
+ 2501              	.LLST17:
+ 2502 0289 00000000 		.4byte	.LVL57
+ 2503 028d 20000000 		.4byte	.LVL60
+ 2504 0291 0100     		.2byte	0x1
+ 2505 0293 52       		.byte	0x52
+ 2506 0294 20000000 		.4byte	.LVL60
+ 2507 0298 24000000 		.4byte	.LVL61
+ 2508 029c 0200     		.2byte	0x2
+ 2509 029e 91       		.byte	0x91
+ 2510 029f 44       		.sleb128 -60
+ 2511 02a0 24000000 		.4byte	.LVL61
+ 2512 02a4 26000000 		.4byte	.LVL62
+ 2513 02a8 0100     		.2byte	0x1
+ 2514 02aa 52       		.byte	0x52
+ 2515 02ab 26000000 		.4byte	.LVL62
+ 2516 02af 60010000 		.4byte	.LFE35
+ 2517 02b3 0200     		.2byte	0x2
+ 2518 02b5 91       		.byte	0x91
+ 2519 02b6 44       		.sleb128 -60
+ 2520 02b7 00000000 		.4byte	0
+ 2521 02bb 00000000 		.4byte	0
+ 2522              	.LLST18:
+ 2523 02bf 00000000 		.4byte	.LVL57
+ 2524 02c3 18000000 		.4byte	.LVL58
+ 2525 02c7 0100     		.2byte	0x1
+ 2526 02c9 53       		.byte	0x53
+ 2527 02ca 18000000 		.4byte	.LVL58
+ 2528 02ce 60010000 		.4byte	.LFE35
+ 2529 02d2 0400     		.2byte	0x4
+ 2530 02d4 F3       		.byte	0xf3
+ 2531 02d5 01       		.uleb128 0x1
+ 2532 02d6 53       		.byte	0x53
+ 2533 02d7 9F       		.byte	0x9f
+ 2534 02d8 00000000 		.4byte	0
+ 2535 02dc 00000000 		.4byte	0
+ 2536              	.LLST19:
+ 2537 02e0 00000000 		.4byte	.LVL57
+ 2538 02e4 18000000 		.4byte	.LVL58
+ 2539 02e8 0200     		.2byte	0x2
+ 2540 02ea 91       		.byte	0x91
+ 2541 02eb 00       		.sleb128 0
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 51
+
+
+ 2542 02ec 18000000 		.4byte	.LVL58
+ 2543 02f0 1A000000 		.4byte	.LVL59
+ 2544 02f4 0200     		.2byte	0x2
+ 2545 02f6 73       		.byte	0x73
+ 2546 02f7 00       		.sleb128 0
+ 2547 02f8 1A000000 		.4byte	.LVL59
+ 2548 02fc 60010000 		.4byte	.LFE35
+ 2549 0300 0200     		.2byte	0x2
+ 2550 0302 91       		.byte	0x91
+ 2551 0303 00       		.sleb128 0
+ 2552 0304 00000000 		.4byte	0
+ 2553 0308 00000000 		.4byte	0
+ 2554              	.LLST20:
+ 2555 030c 1A000000 		.4byte	.LVL59
+ 2556 0310 28000000 		.4byte	.LVL63
+ 2557 0314 0200     		.2byte	0x2
+ 2558 0316 30       		.byte	0x30
+ 2559 0317 9F       		.byte	0x9f
+ 2560 0318 28000000 		.4byte	.LVL63
+ 2561 031c 60010000 		.4byte	.LFE35
+ 2562 0320 0300     		.2byte	0x3
+ 2563 0322 91       		.byte	0x91
+ 2564 0323 BC7F     		.sleb128 -68
+ 2565 0325 00000000 		.4byte	0
+ 2566 0329 00000000 		.4byte	0
+ 2567              	.LLST21:
+ 2568 032d 4C000000 		.4byte	.LVL68
+ 2569 0331 6C000000 		.4byte	.LVL71
+ 2570 0335 0200     		.2byte	0x2
+ 2571 0337 30       		.byte	0x30
+ 2572 0338 9F       		.byte	0x9f
+ 2573 0339 6C000000 		.4byte	.LVL71
+ 2574 033d D6000000 		.4byte	.LVL89
+ 2575 0341 0100     		.2byte	0x1
+ 2576 0343 57       		.byte	0x57
+ 2577 0344 D8000000 		.4byte	.LVL90
+ 2578 0348 3E010000 		.4byte	.LVL108
+ 2579 034c 0100     		.2byte	0x1
+ 2580 034e 57       		.byte	0x57
+ 2581 034f 00000000 		.4byte	0
+ 2582 0353 00000000 		.4byte	0
+ 2583              	.LLST22:
+ 2584 0357 4C000000 		.4byte	.LVL68
+ 2585 035b 6C000000 		.4byte	.LVL71
+ 2586 035f 0200     		.2byte	0x2
+ 2587 0361 30       		.byte	0x30
+ 2588 0362 9F       		.byte	0x9f
+ 2589 0363 A2000000 		.4byte	.LVL77
+ 2590 0367 A4000000 		.4byte	.LVL78
+ 2591 036b 0600     		.2byte	0x6
+ 2592 036d 73       		.byte	0x73
+ 2593 036e 00       		.sleb128 0
+ 2594 036f 70       		.byte	0x70
+ 2595 0370 00       		.sleb128 0
+ 2596 0371 21       		.byte	0x21
+ 2597 0372 9F       		.byte	0x9f
+ 2598 0373 A4000000 		.4byte	.LVL78
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 52
+
+
+ 2599 0377 BA000000 		.4byte	.LVL83
+ 2600 037b 0600     		.2byte	0x6
+ 2601 037d 7A       		.byte	0x7a
+ 2602 037e 00       		.sleb128 0
+ 2603 037f 70       		.byte	0x70
+ 2604 0380 00       		.sleb128 0
+ 2605 0381 21       		.byte	0x21
+ 2606 0382 9F       		.byte	0x9f
+ 2607 0383 BA000000 		.4byte	.LVL83
+ 2608 0387 D3000000 		.4byte	.LVL88-1
+ 2609 038b 0E00     		.2byte	0xe
+ 2610 038d 91       		.byte	0x91
+ 2611 038e 51       		.sleb128 -47
+ 2612 038f 94       		.byte	0x94
+ 2613 0390 01       		.byte	0x1
+ 2614 0391 48       		.byte	0x48
+ 2615 0392 24       		.byte	0x24
+ 2616 0393 48       		.byte	0x48
+ 2617 0394 26       		.byte	0x26
+ 2618 0395 38       		.byte	0x38
+ 2619 0396 24       		.byte	0x24
+ 2620 0397 7A       		.byte	0x7a
+ 2621 0398 00       		.sleb128 0
+ 2622 0399 21       		.byte	0x21
+ 2623 039a 9F       		.byte	0x9f
+ 2624 039b 00000000 		.4byte	0
+ 2625 039f 00000000 		.4byte	0
+ 2626              	.LLST23:
+ 2627 03a3 4C000000 		.4byte	.LVL68
+ 2628 03a7 6C000000 		.4byte	.LVL71
+ 2629 03ab 0200     		.2byte	0x2
+ 2630 03ad 30       		.byte	0x30
+ 2631 03ae 9F       		.byte	0x9f
+ 2632 03af AC000000 		.4byte	.LVL79
+ 2633 03b3 AE000000 		.4byte	.LVL80
+ 2634 03b7 0600     		.2byte	0x6
+ 2635 03b9 73       		.byte	0x73
+ 2636 03ba 00       		.sleb128 0
+ 2637 03bb 71       		.byte	0x71
+ 2638 03bc 00       		.sleb128 0
+ 2639 03bd 21       		.byte	0x21
+ 2640 03be 9F       		.byte	0x9f
+ 2641 03bf AE000000 		.4byte	.LVL80
+ 2642 03c3 C2000000 		.4byte	.LVL85
+ 2643 03c7 0600     		.2byte	0x6
+ 2644 03c9 7C       		.byte	0x7c
+ 2645 03ca 00       		.sleb128 0
+ 2646 03cb 71       		.byte	0x71
+ 2647 03cc 00       		.sleb128 0
+ 2648 03cd 21       		.byte	0x21
+ 2649 03ce 9F       		.byte	0x9f
+ 2650 03cf C2000000 		.4byte	.LVL85
+ 2651 03d3 D3000000 		.4byte	.LVL88-1
+ 2652 03d7 0E00     		.2byte	0xe
+ 2653 03d9 91       		.byte	0x91
+ 2654 03da 53       		.sleb128 -45
+ 2655 03db 94       		.byte	0x94
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 53
+
+
+ 2656 03dc 01       		.byte	0x1
+ 2657 03dd 48       		.byte	0x48
+ 2658 03de 24       		.byte	0x24
+ 2659 03df 48       		.byte	0x48
+ 2660 03e0 26       		.byte	0x26
+ 2661 03e1 38       		.byte	0x38
+ 2662 03e2 24       		.byte	0x24
+ 2663 03e3 7C       		.byte	0x7c
+ 2664 03e4 00       		.sleb128 0
+ 2665 03e5 21       		.byte	0x21
+ 2666 03e6 9F       		.byte	0x9f
+ 2667 03e7 00000000 		.4byte	0
+ 2668 03eb 00000000 		.4byte	0
+ 2669              	.LLST24:
+ 2670 03ef 4C000000 		.4byte	.LVL68
+ 2671 03f3 6C000000 		.4byte	.LVL71
+ 2672 03f7 0200     		.2byte	0x2
+ 2673 03f9 30       		.byte	0x30
+ 2674 03fa 9F       		.byte	0x9f
+ 2675 03fb B6000000 		.4byte	.LVL81
+ 2676 03ff B8000000 		.4byte	.LVL82
+ 2677 0403 0600     		.2byte	0x6
+ 2678 0405 73       		.byte	0x73
+ 2679 0406 00       		.sleb128 0
+ 2680 0407 72       		.byte	0x72
+ 2681 0408 00       		.sleb128 0
+ 2682 0409 21       		.byte	0x21
+ 2683 040a 9F       		.byte	0x9f
+ 2684 040b B8000000 		.4byte	.LVL82
+ 2685 040f D3000000 		.4byte	.LVL88-1
+ 2686 0413 0600     		.2byte	0x6
+ 2687 0415 7B       		.byte	0x7b
+ 2688 0416 00       		.sleb128 0
+ 2689 0417 72       		.byte	0x72
+ 2690 0418 00       		.sleb128 0
+ 2691 0419 21       		.byte	0x21
+ 2692 041a 9F       		.byte	0x9f
+ 2693 041b 00000000 		.4byte	0
+ 2694 041f 00000000 		.4byte	0
+ 2695              	.LLST25:
+ 2696 0423 4C000000 		.4byte	.LVL68
+ 2697 0427 6C000000 		.4byte	.LVL71
+ 2698 042b 0200     		.2byte	0x2
+ 2699 042d 30       		.byte	0x30
+ 2700 042e 9F       		.byte	0x9f
+ 2701 042f 6C000000 		.4byte	.LVL71
+ 2702 0433 F2000000 		.4byte	.LVL94
+ 2703 0437 0100     		.2byte	0x1
+ 2704 0439 56       		.byte	0x56
+ 2705 043a 00000000 		.4byte	0
+ 2706 043e 00000000 		.4byte	0
+ 2707              	.LLST26:
+ 2708 0442 4C000000 		.4byte	.LVL68
+ 2709 0446 6C000000 		.4byte	.LVL71
+ 2710 044a 0200     		.2byte	0x2
+ 2711 044c 30       		.byte	0x30
+ 2712 044d 9F       		.byte	0x9f
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 54
+
+
+ 2713 044e 6C000000 		.4byte	.LVL71
+ 2714 0452 0E010000 		.4byte	.LVL99
+ 2715 0456 0100     		.2byte	0x1
+ 2716 0458 55       		.byte	0x55
+ 2717 0459 00000000 		.4byte	0
+ 2718 045d 00000000 		.4byte	0
+ 2719              	.LLST27:
+ 2720 0461 4C000000 		.4byte	.LVL68
+ 2721 0465 6C000000 		.4byte	.LVL71
+ 2722 0469 0200     		.2byte	0x2
+ 2723 046b 30       		.byte	0x30
+ 2724 046c 9F       		.byte	0x9f
+ 2725 046d 6C000000 		.4byte	.LVL71
+ 2726 0471 2A010000 		.4byte	.LVL104
+ 2727 0475 0100     		.2byte	0x1
+ 2728 0477 54       		.byte	0x54
+ 2729 0478 00000000 		.4byte	0
+ 2730 047c 00000000 		.4byte	0
+ 2731              	.LLST28:
+ 2732 0480 8A000000 		.4byte	.LVL74
+ 2733 0484 8E000000 		.4byte	.LVL75
+ 2734 0488 0100     		.2byte	0x1
+ 2735 048a 50       		.byte	0x50
+ 2736 048b 00000000 		.4byte	0
+ 2737 048f 00000000 		.4byte	0
+ 2738              		.section	.debug_aranges,"",%progbits
+ 2739 0000 4C000000 		.4byte	0x4c
+ 2740 0004 0200     		.2byte	0x2
+ 2741 0006 00000000 		.4byte	.Ldebug_info0
+ 2742 000a 04       		.byte	0x4
+ 2743 000b 00       		.byte	0
+ 2744 000c 0000     		.2byte	0
+ 2745 000e 0000     		.2byte	0
+ 2746 0010 00000000 		.4byte	.LFB34
+ 2747 0014 50000000 		.4byte	.LFE34-.LFB34
+ 2748 0018 00000000 		.4byte	.LFB36
+ 2749 001c 1E000000 		.4byte	.LFE36-.LFB36
+ 2750 0020 00000000 		.4byte	.LFB37
+ 2751 0024 82000000 		.4byte	.LFE37-.LFB37
+ 2752 0028 00000000 		.4byte	.LFB38
+ 2753 002c 3C000000 		.4byte	.LFE38-.LFB38
+ 2754 0030 00000000 		.4byte	.LFB39
+ 2755 0034 22000000 		.4byte	.LFE39-.LFB39
+ 2756 0038 00000000 		.4byte	.LFB33
+ 2757 003c 2A000000 		.4byte	.LFE33-.LFB33
+ 2758 0040 00000000 		.4byte	.LFB35
+ 2759 0044 60010000 		.4byte	.LFE35-.LFB35
+ 2760 0048 00000000 		.4byte	0
+ 2761 004c 00000000 		.4byte	0
+ 2762              		.section	.debug_ranges,"",%progbits
+ 2763              	.Ldebug_ranges0:
+ 2764 0000 00000000 		.4byte	.LFB34
+ 2765 0004 50000000 		.4byte	.LFE34
+ 2766 0008 00000000 		.4byte	.LFB36
+ 2767 000c 1E000000 		.4byte	.LFE36
+ 2768 0010 00000000 		.4byte	.LFB37
+ 2769 0014 82000000 		.4byte	.LFE37
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 55
+
+
+ 2770 0018 00000000 		.4byte	.LFB38
+ 2771 001c 3C000000 		.4byte	.LFE38
+ 2772 0020 00000000 		.4byte	.LFB39
+ 2773 0024 22000000 		.4byte	.LFE39
+ 2774 0028 00000000 		.4byte	.LFB33
+ 2775 002c 2A000000 		.4byte	.LFE33
+ 2776 0030 00000000 		.4byte	.LFB35
+ 2777 0034 60010000 		.4byte	.LFE35
+ 2778 0038 00000000 		.4byte	0
+ 2779 003c 00000000 		.4byte	0
+ 2780              		.section	.debug_line,"",%progbits
+ 2781              	.Ldebug_line0:
+ 2782 0000 4C020000 		.section	.debug_str,"MS",%progbits,1
+ 2782      02003101 
+ 2782      00000201 
+ 2782      FB0E0D00 
+ 2782      01010101 
+ 2783              	.LASF40:
+ 2784 0000 6163635F 		.ascii	"acc_x\000"
+ 2784      7800
+ 2785              	.LASF52:
+ 2786 0006 43795379 		.ascii	"CySysWdtEnable\000"
+ 2786      73576474 
+ 2786      456E6162 
+ 2786      6C6500
+ 2787              	.LASF38:
+ 2788 0015 6F757470 		.ascii	"output_data_rate\000"
+ 2788      75745F64 
+ 2788      6174615F 
+ 2788      72617465 
+ 2788      00
+ 2789              	.LASF2:
+ 2790 0026 73686F72 		.ascii	"short int\000"
+ 2790      7420696E 
+ 2790      7400
+ 2791              	.LASF41:
+ 2792 0030 6163635F 		.ascii	"acc_y\000"
+ 2792      7900
+ 2793              	.LASF42:
+ 2794 0036 6163635F 		.ascii	"acc_z\000"
+ 2794      7A00
+ 2795              	.LASF18:
+ 2796 003c 73697A65 		.ascii	"sizetype\000"
+ 2796      74797065 
+ 2796      00
+ 2797              	.LASF43:
+ 2798 0045 73756D5F 		.ascii	"sum_square_acc_x\000"
+ 2798      73717561 
+ 2798      72655F61 
+ 2798      63635F78 
+ 2798      00
+ 2799              	.LASF44:
+ 2800 0056 73756D5F 		.ascii	"sum_square_acc_y\000"
+ 2800      73717561 
+ 2800      72655F61 
+ 2800      63635F79 
+ 2800      00
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 56
+
+
+ 2801              	.LASF45:
+ 2802 0067 73756D5F 		.ascii	"sum_square_acc_z\000"
+ 2802      73717561 
+ 2802      72655F61 
+ 2802      63635F7A 
+ 2802      00
+ 2803              	.LASF46:
+ 2804 0078 62756666 		.ascii	"buff\000"
+ 2804      00
+ 2805              	.LASF36:
+ 2806 007d 61636365 		.ascii	"accelero_acquisition_efficace\000"
+ 2806      6C65726F 
+ 2806      5F616371 
+ 2806      75697369 
+ 2806      74696F6E 
+ 2807              	.LASF21:
+ 2808 009b 696E6974 		.ascii	"initialisation_projet\000"
+ 2808      69616C69 
+ 2808      73617469 
+ 2808      6F6E5F70 
+ 2808      726F6A65 
+ 2809              	.LASF10:
+ 2810 00b1 75696E74 		.ascii	"uint16\000"
+ 2810      313600
+ 2811              	.LASF53:
+ 2812 00b8 50696E5F 		.ascii	"Pin_gestion_sleep_xbee_SetDriveMode\000"
+ 2812      67657374 
+ 2812      696F6E5F 
+ 2812      736C6565 
+ 2812      705F7862 
+ 2813              	.LASF13:
+ 2814 00dc 696E7431 		.ascii	"int16\000"
+ 2814      3600
+ 2815              	.LASF9:
+ 2816 00e2 75696E74 		.ascii	"uint8\000"
+ 2816      3800
+ 2817              	.LASF65:
+ 2818 00e8 41636365 		.ascii	"Accelero_Start\000"
+ 2818      6C65726F 
+ 2818      5F537461 
+ 2818      727400
+ 2819              	.LASF30:
+ 2820 00f7 61636365 		.ascii	"accelero_write\000"
+ 2820      6C65726F 
+ 2820      5F777269 
+ 2820      746500
+ 2821              	.LASF50:
+ 2822 0106 43795379 		.ascii	"CySysWdtSetClearOnMatch\000"
+ 2822      73576474 
+ 2822      53657443 
+ 2822      6C656172 
+ 2822      4F6E4D61 
+ 2823              	.LASF39:
+ 2824 011e 64656C61 		.ascii	"delay\000"
+ 2824      7900
+ 2825              	.LASF14:
+ 2826 0124 666C6F61 		.ascii	"float\000"
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 57
+
+
+ 2826      7400
+ 2827              	.LASF6:
+ 2828 012a 6C6F6E67 		.ascii	"long long int\000"
+ 2828      206C6F6E 
+ 2828      6720696E 
+ 2828      7400
+ 2829              	.LASF17:
+ 2830 0138 63796973 		.ascii	"cyisraddress\000"
+ 2830      72616464 
+ 2830      72657373 
+ 2830      00
+ 2831              	.LASF12:
+ 2832 0145 696E7438 		.ascii	"int8\000"
+ 2832      00
+ 2833              	.LASF20:
+ 2834 014a 74696D65 		.ascii	"time_sec\000"
+ 2834      5F736563 
+ 2834      00
+ 2835              	.LASF4:
+ 2836 0153 6C6F6E67 		.ascii	"long int\000"
+ 2836      20696E74 
+ 2836      00
+ 2837              	.LASF59:
+ 2838 015c 7A696762 		.ascii	"zigbee_Sleep\000"
+ 2838      65655F53 
+ 2838      6C656570 
+ 2838      00
+ 2839              	.LASF32:
+ 2840 0169 61636365 		.ascii	"accelero_init\000"
+ 2840      6C65726F 
+ 2840      5F696E69 
+ 2840      7400
+ 2841              	.LASF22:
+ 2842 0177 61636365 		.ascii	"accelero_transmission\000"
+ 2842      6C65726F 
+ 2842      5F747261 
+ 2842      6E736D69 
+ 2842      7373696F 
+ 2843              	.LASF58:
+ 2844 018d 7A696762 		.ascii	"zigbee_Start\000"
+ 2844      65655F53 
+ 2844      74617274 
+ 2844      00
+ 2845              	.LASF1:
+ 2846 019a 756E7369 		.ascii	"unsigned char\000"
+ 2846      676E6564 
+ 2846      20636861 
+ 2846      7200
+ 2847              	.LASF67:
+ 2848 01a8 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
+ 2848      4320342E 
+ 2848      392E3320 
+ 2848      32303135 
+ 2848      30333033 
+ 2849 01db 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m0 -mthumb -g -O"
+ 2849      20726576 
+ 2849      6973696F 
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 58
+
+
+ 2849      6E203232 
+ 2849      31323230 
+ 2850 020e 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 2850      66756E63 
+ 2850      74696F6E 
+ 2850      2D736563 
+ 2850      74696F6E 
+ 2851              	.LASF26:
+ 2852 0236 72656769 		.ascii	"register_adress\000"
+ 2852      73746572 
+ 2852      5F616472 
+ 2852      65737300 
+ 2853              	.LASF19:
+ 2854 0246 6C6F6E67 		.ascii	"long double\000"
+ 2854      20646F75 
+ 2854      626C6500 
+ 2855              	.LASF70:
+ 2856 0252 43794465 		.ascii	"CyDelayUs\000"
+ 2856      6C617955 
+ 2856      7300
+ 2857              	.LASF28:
+ 2858 025c 72645F64 		.ascii	"rd_data\000"
+ 2858      61746100 
+ 2859              	.LASF0:
+ 2860 0264 7369676E 		.ascii	"signed char\000"
+ 2860      65642063 
+ 2860      68617200 
+ 2861              	.LASF7:
+ 2862 0270 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 2862      206C6F6E 
+ 2862      6720756E 
+ 2862      7369676E 
+ 2862      65642069 
+ 2863              	.LASF8:
+ 2864 0287 756E7369 		.ascii	"unsigned int\000"
+ 2864      676E6564 
+ 2864      20696E74 
+ 2864      00
+ 2865              	.LASF48:
+ 2866 0294 43795379 		.ascii	"CySysWdtSetMode\000"
+ 2866      73576474 
+ 2866      5365744D 
+ 2866      6F646500 
+ 2867              	.LASF69:
+ 2868 02a4 433A5C55 		.ascii	"C:\\Users\\Dylan\\Desktop\\ADXL345_sleep_xbee_wdt_t"
+ 2868      73657273 
+ 2868      5C44796C 
+ 2868      616E5C44 
+ 2868      65736B74 
+ 2869 02d3 6F706465 		.ascii	"opdesign\\ADXL345_sleep_xbee.cydsn\000"
+ 2869      7369676E 
+ 2869      5C414458 
+ 2869      4C333435 
+ 2869      5F736C65 
+ 2870              	.LASF61:
+ 2871 02f5 41636365 		.ascii	"Accelero_I2CMasterWriteBuf\000"
+ 2871      6C65726F 
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 59
+
+
+ 2871      5F493243 
+ 2871      4D617374 
+ 2871      65725772 
+ 2872              	.LASF3:
+ 2873 0310 73686F72 		.ascii	"short unsigned int\000"
+ 2873      7420756E 
+ 2873      7369676E 
+ 2873      65642069 
+ 2873      6E7400
+ 2874              	.LASF37:
+ 2875 0323 6E625F61 		.ascii	"nb_acquisition\000"
+ 2875      63717569 
+ 2875      73697469 
+ 2875      6F6E00
+ 2876              	.LASF16:
+ 2877 0332 63686172 		.ascii	"char\000"
+ 2877      00
+ 2878              	.LASF29:
+ 2879 0337 77725F64 		.ascii	"wr_data\000"
+ 2879      61746100 
+ 2880              	.LASF34:
+ 2881 033f 7265736F 		.ascii	"resolution\000"
+ 2881      6C757469 
+ 2881      6F6E00
+ 2882              	.LASF51:
+ 2883 034a 43795379 		.ascii	"CySysWdtSetCascade\000"
+ 2883      73576474 
+ 2883      53657443 
+ 2883      61736361 
+ 2883      646500
+ 2884              	.LASF66:
+ 2885 035d 41636365 		.ascii	"Accelero_Stop\000"
+ 2885      6C65726F 
+ 2885      5F53746F 
+ 2885      7000
+ 2886              	.LASF68:
+ 2887 036b 2E5C666F 		.ascii	".\\fonction.c\000"
+ 2887      6E637469 
+ 2887      6F6E2E63 
+ 2887      00
+ 2888              	.LASF27:
+ 2889 0378 64617461 		.ascii	"data\000"
+ 2889      00
+ 2890              	.LASF47:
+ 2891 037d 57647449 		.ascii	"WdtIsr_StartEx\000"
+ 2891      73725F53 
+ 2891      74617274 
+ 2891      457800
+ 2892              	.LASF23:
+ 2893 038c 615F676C 		.ascii	"a_globale\000"
+ 2893      6F62616C 
+ 2893      6500
+ 2894              	.LASF31:
+ 2895 0396 62756666 		.ascii	"buffer\000"
+ 2895      657200
+ 2896              	.LASF11:
+ 2897 039d 75696E74 		.ascii	"uint32\000"
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 60
+
+
+ 2897      333200
+ 2898              	.LASF5:
+ 2899 03a4 6C6F6E67 		.ascii	"long unsigned int\000"
+ 2899      20756E73 
+ 2899      69676E65 
+ 2899      6420696E 
+ 2899      7400
+ 2900              	.LASF15:
+ 2901 03b6 646F7562 		.ascii	"double\000"
+ 2901      6C6500
+ 2902              	.LASF24:
+ 2903 03bd 61636365 		.ascii	"accelero_calcul_norme_acc_efficace\000"
+ 2903      6C65726F 
+ 2903      5F63616C 
+ 2903      63756C5F 
+ 2903      6E6F726D 
+ 2904              	.LASF54:
+ 2905 03e0 50696E5F 		.ascii	"Pin_gestion_sleep_xbee_Write\000"
+ 2905      67657374 
+ 2905      696F6E5F 
+ 2905      736C6565 
+ 2905      705F7862 
+ 2906              	.LASF60:
+ 2907 03fd 73717274 		.ascii	"sqrt\000"
+ 2907      00
+ 2908              	.LASF56:
+ 2909 0402 50696E5F 		.ascii	"Pin_tx_SetDriveMode\000"
+ 2909      74785F53 
+ 2909      65744472 
+ 2909      6976654D 
+ 2909      6F646500 
+ 2910              	.LASF62:
+ 2911 0416 41636365 		.ascii	"Accelero_I2CMasterReadBuf\000"
+ 2911      6C65726F 
+ 2911      5F493243 
+ 2911      4D617374 
+ 2911      65725265 
+ 2912              	.LASF33:
+ 2913 0430 72616E67 		.ascii	"range\000"
+ 2913      6500
+ 2914              	.LASF57:
+ 2915 0436 7A696762 		.ascii	"zigbee_PutArray\000"
+ 2915      65655F50 
+ 2915      75744172 
+ 2915      72617900 
+ 2916              	.LASF35:
+ 2917 0446 72617465 		.ascii	"rate\000"
+ 2917      00
+ 2918              	.LASF25:
+ 2919 044b 61636365 		.ascii	"accelero_read\000"
+ 2919      6C65726F 
+ 2919      5F726561 
+ 2919      6400
+ 2920              	.LASF55:
+ 2921 0459 43794465 		.ascii	"CyDelay\000"
+ 2921      6C617900 
+ 2922              	.LASF64:
+ARM GAS  C:\Users\Dylan\AppData\Local\Temp\ccvArTUk.s 			page 61
+
+
+ 2923 0461 41636365 		.ascii	"Accelero_I2CMasterStatus\000"
+ 2923      6C65726F 
+ 2923      5F493243 
+ 2923      4D617374 
+ 2923      65725374 
+ 2924              	.LASF49:
+ 2925 047a 43795379 		.ascii	"CySysWdtSetMatch\000"
+ 2925      73576474 
+ 2925      5365744D 
+ 2925      61746368 
+ 2925      00
+ 2926              	.LASF63:
+ 2927 048b 7A696762 		.ascii	"zigbee_GetTxBufferSize\000"
+ 2927      65655F47 
+ 2927      65745478 
+ 2927      42756666 
+ 2927      65725369 
+ 2928              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br

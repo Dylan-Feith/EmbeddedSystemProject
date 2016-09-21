@@ -1,0 +1,1706 @@
+##################################################################### 
+                    Table of Contents
+===================================================================== 
+	1::Clock Frequency Summary
+	2::Clock Relationship Summary
+	3::Datasheet Report
+		3.1::Setup to Clock
+		3.2::Clock to Out
+		3.3::Pad to Pad
+	4::Path Details for Clock Frequency Summary
+		4.1::Critical Path Report for zigbee_IntClock
+	5::Path Details for Clock Relationship Summary
+		5.1::Critical Path Report for (zigbee_IntClock:R vs. zigbee_IntClock:R)
+===================================================================== 
+                    End of Table of Contents
+##################################################################### 
+
+##################################################################### 
+                    1::Clock Frequency Summary
+===================================================================== 
+Number of clocks: 9
+Clock: Accelero_SCBCLK       | N/A                   | Target: 2.00 MHz  | 
+Clock: Accelero_SCBCLK(FFB)  | N/A                   | Target: 2.00 MHz  | 
+Clock: CyHFCLK               | N/A                   | Target: 4.00 MHz  | 
+Clock: CyILO                 | N/A                   | Target: 0.03 MHz  | 
+Clock: CyIMO                 | N/A                   | Target: 4.00 MHz  | 
+Clock: CyLFCLK               | N/A                   | Target: 0.03 MHz  | 
+Clock: CyRouted1             | N/A                   | Target: 4.00 MHz  | 
+Clock: CySYSCLK              | N/A                   | Target: 2.00 MHz  | 
+Clock: zigbee_IntClock       | Frequency: 45.01 MHz  | Target: 0.08 MHz  | 
+
+ =====================================================================
+                    End of Clock Frequency Summary
+ #####################################################################
+
+
+ #####################################################################
+                    2::Clock Relationship Summary
+ =====================================================================
+
+Launch Clock     Capture Clock    Constraint(R-R)  Slack(R-R)  Constraint(R-F)  Slack(R-F)  Constraint(F-F)  Slack(F-F)  Constraint(F-R)  Slack(F-R)  
+---------------  ---------------  ---------------  ----------  ---------------  ----------  ---------------  ----------  ---------------  ----------  
+zigbee_IntClock  zigbee_IntClock  1.3e+007         12977782    N/A              N/A         N/A              N/A         N/A              N/A         
+
+ =====================================================================
+                    End of Clock Relationship Summary
+ #####################################################################
+
+
+ #####################################################################
+                    3::Datasheet Report
+
+All values are in Picoseconds
+ =====================================================================
+
+3.1::Setup to Clock                     
+-------------------                     
+
+Port Name  Setup to Clk  Clock Name:Phase  
+---------  ------------  ----------------  
+
+
+-----------------------3.2::Clock to Out
+----------------------------------------
+
+Port Name      Clock to Out  Clock Name:Phase   
+-------------  ------------  -----------------  
+Pin_tx(0)_PAD  28251         zigbee_IntClock:R  
+
+
+                         3.3::Pad to Pad
+                         ---------------
+
+Port Name (Source)  Port Name (Destination)  Delay  
+------------------  -----------------------  -----  
+
+===================================================================== 
+                    End of Datasheet Report
+##################################################################### 
+##################################################################### 
+                    4::Path Details for Clock Frequency Summary
+===================================================================== 
+4.1::Critical Path Report for zigbee_IntClock
+*********************************************
+Clock: zigbee_IntClock
+Frequency: 45.01 MHz | Target: 0.08 MHz
+
+++++ Path 1 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_state_1\/q
+Path End       : \zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/cs_addr_0
+Capture Clock  : \zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/clock
+Path slack     : 12977782p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                     -11520
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12988480
+
+Launch Clock Arrival Time                       0
++ Clock path delay                          0
++ Data path delay                       10698
+-------------------------------------   ----- 
+End-of-path arrival time (ps)           10698
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_1\/clock_0                         macrocell6                 0      0  RISE       1
+
+Data path
+pin name                                         model name     delay     AT     slack  edge  Fanout
+-----------------------------------------------  -------------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_state_1\/q                      macrocell6      1250   1250  12977782  RISE       1
+\zigbee:BUART:counter_load_not\/main_0           macrocell2      3870   5120  12977782  RISE       1
+\zigbee:BUART:counter_load_not\/q                macrocell2      3350   8470  12977782  RISE       1
+\zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/cs_addr_0  datapathcell2   2229  10698  12977782  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/clock               datapathcell2              0      0  RISE       1
+
+
+
+===================================================================== 
+                    End of Path Details for Clock Frequency Summary
+##################################################################### 
+
+
+##################################################################### 
+                    5::Path Details for Clock Relationship Summary
+===================================================================== 
+
+5.1::Critical Path Report for (zigbee_IntClock:R vs. zigbee_IntClock:R)
+***********************************************************************
+
+++++ Path 1 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_state_1\/q
+Path End       : \zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/cs_addr_0
+Capture Clock  : \zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/clock
+Path slack     : 12977782p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                     -11520
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12988480
+
+Launch Clock Arrival Time                       0
++ Clock path delay                          0
++ Data path delay                       10698
+-------------------------------------   ----- 
+End-of-path arrival time (ps)           10698
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_1\/clock_0                         macrocell6                 0      0  RISE       1
+
+Data path
+pin name                                         model name     delay     AT     slack  edge  Fanout
+-----------------------------------------------  -------------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_state_1\/q                      macrocell6      1250   1250  12977782  RISE       1
+\zigbee:BUART:counter_load_not\/main_0           macrocell2      3870   5120  12977782  RISE       1
+\zigbee:BUART:counter_load_not\/q                macrocell2      3350   8470  12977782  RISE       1
+\zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/cs_addr_0  datapathcell2   2229  10698  12977782  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/clock               datapathcell2              0      0  RISE       1
+
+
+
+===================================================================== 
+                    End of Path Details for Clock Relationship Summary
+##################################################################### 
+
+##################################################################### 
+                    Detailed Report for all timing paths 
+===================================================================== 
+
+++++ Path 1 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_state_1\/q
+Path End       : \zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/cs_addr_0
+Capture Clock  : \zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/clock
+Path slack     : 12977782p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                     -11520
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12988480
+
+Launch Clock Arrival Time                       0
++ Clock path delay                          0
++ Data path delay                       10698
+-------------------------------------   ----- 
+End-of-path arrival time (ps)           10698
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_1\/clock_0                         macrocell6                 0      0  RISE       1
+
+Data path
+pin name                                         model name     delay     AT     slack  edge  Fanout
+-----------------------------------------------  -------------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_state_1\/q                      macrocell6      1250   1250  12977782  RISE       1
+\zigbee:BUART:counter_load_not\/main_0           macrocell2      3870   5120  12977782  RISE       1
+\zigbee:BUART:counter_load_not\/q                macrocell2      3350   8470  12977782  RISE       1
+\zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/cs_addr_0  datapathcell2   2229  10698  12977782  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/clock               datapathcell2              0      0  RISE       1
+
+
+
+++++ Path 2 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:sTX:TxShifter:u0\/f0_blk_stat_comb
+Path End       : \zigbee:BUART:sTX:TxSts\/status_0
+Capture Clock  : \zigbee:BUART:sTX:TxSts\/clock
+Path slack     : 12984064p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -1570
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12998430
+
+Launch Clock Arrival Time                       0
++ Clock path delay                          0
++ Data path delay                       14366
+-------------------------------------   ----- 
+End-of-path arrival time (ps)           14366
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:sTX:TxShifter:u0\/clock                     datapathcell1              0      0  RISE       1
+
+Data path
+pin name                                          model name     delay     AT     slack  edge  Fanout
+------------------------------------------------  -------------  -----  -----  --------  ----  ------
+\zigbee:BUART:sTX:TxShifter:u0\/f0_blk_stat_comb  datapathcell1   5280   5280  12984064  RISE       1
+\zigbee:BUART:tx_status_0\/main_3                 macrocell3      3481   8761  12984064  RISE       1
+\zigbee:BUART:tx_status_0\/q                      macrocell3      3350  12111  12984064  RISE       1
+\zigbee:BUART:sTX:TxSts\/status_0                 statusicell1    2255  14366  12984064  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:sTX:TxSts\/clock                            statusicell1               0      0  RISE       1
+
+
+
+++++ Path 3 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:sTX:TxShifter:u0\/so_comb
+Path End       : \zigbee:BUART:txn\/main_3
+Capture Clock  : \zigbee:BUART:txn\/clock_0
+Path slack     : 12986981p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       9509
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           9509
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:sTX:TxShifter:u0\/clock                     datapathcell1              0      0  RISE       1
+
+Data path
+pin name                                 model name     delay     AT     slack  edge  Fanout
+---------------------------------------  -------------  -----  -----  --------  ----  ------
+\zigbee:BUART:sTX:TxShifter:u0\/so_comb  datapathcell1   7280   7280  12986981  RISE       1
+\zigbee:BUART:txn\/main_3                macrocell5      2229   9509  12986981  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:txn\/clock_0                                macrocell5                 0      0  RISE       1
+
+
+
+++++ Path 4 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:sTX:TxShifter:u0\/f0_blk_stat_comb
+Path End       : \zigbee:BUART:tx_state_0\/main_3
+Capture Clock  : \zigbee:BUART:tx_state_0\/clock_0
+Path slack     : 12987729p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       8761
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           8761
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:sTX:TxShifter:u0\/clock                     datapathcell1              0      0  RISE       1
+
+Data path
+pin name                                          model name     delay     AT     slack  edge  Fanout
+------------------------------------------------  -------------  -----  -----  --------  ----  ------
+\zigbee:BUART:sTX:TxShifter:u0\/f0_blk_stat_comb  datapathcell1   5280   5280  12984064  RISE       1
+\zigbee:BUART:tx_state_0\/main_3                  macrocell7      3481   8761  12987729  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_0\/clock_0                         macrocell7                 0      0  RISE       1
+
+
+
+++++ Path 5 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_state_1\/q
+Path End       : \zigbee:BUART:sTX:TxShifter:u0\/cs_addr_2
+Capture Clock  : \zigbee:BUART:sTX:TxShifter:u0\/clock
+Path slack     : 12987888p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -6290
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12993710
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       5822
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           5822
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_1\/clock_0                         macrocell6                 0      0  RISE       1
+
+Data path
+pin name                                   model name     delay     AT     slack  edge  Fanout
+-----------------------------------------  -------------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_state_1\/q                macrocell6      1250   1250  12977782  RISE       1
+\zigbee:BUART:sTX:TxShifter:u0\/cs_addr_2  datapathcell1   4572   5822  12987888  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:sTX:TxShifter:u0\/clock                     datapathcell1              0      0  RISE       1
+
+
+
+++++ Path 6 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_state_0\/q
+Path End       : \zigbee:BUART:sTX:TxShifter:u0\/cs_addr_1
+Capture Clock  : \zigbee:BUART:sTX:TxShifter:u0\/clock
+Path slack     : 12988965p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -6290
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12993710
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4745
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4745
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_0\/clock_0                         macrocell7                 0      0  RISE       1
+
+Data path
+pin name                                   model name     delay     AT     slack  edge  Fanout
+-----------------------------------------  -------------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_state_0\/q                macrocell7      1250   1250  12978170  RISE       1
+\zigbee:BUART:sTX:TxShifter:u0\/cs_addr_1  datapathcell1   3495   4745  12988965  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:sTX:TxShifter:u0\/clock                     datapathcell1              0      0  RISE       1
+
+
+
+++++ Path 7 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/ce0_reg
+Path End       : \zigbee:BUART:sTX:TxShifter:u0\/cs_addr_0
+Capture Clock  : \zigbee:BUART:sTX:TxShifter:u0\/clock
+Path slack     : 12989565p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -6290
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12993710
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4145
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4145
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/clock               datapathcell2              0      0  RISE       1
+
+Data path
+pin name                                       model name     delay     AT     slack  edge  Fanout
+---------------------------------------------  -------------  -----  -----  --------  ----  ------
+\zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/ce0_reg  datapathcell2   1000   1000  12978773  RISE       1
+\zigbee:BUART:sTX:TxShifter:u0\/cs_addr_0      datapathcell1   3145   4145  12989565  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:sTX:TxShifter:u0\/clock                     datapathcell1              0      0  RISE       1
+
+
+
+++++ Path 8 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_state_1\/q
+Path End       : \zigbee:BUART:txn\/main_1
+Capture Clock  : \zigbee:BUART:txn\/clock_0
+Path slack     : 12990138p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       6352
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           6352
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_1\/clock_0                         macrocell6                 0      0  RISE       1
+
+Data path
+pin name                     model name   delay     AT     slack  edge  Fanout
+---------------------------  -----------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_state_1\/q  macrocell6    1250   1250  12977782  RISE       1
+\zigbee:BUART:txn\/main_1    macrocell5    5102   6352  12990138  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:txn\/clock_0                                macrocell5                 0      0  RISE       1
+
+
+
+++++ Path 9 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_state_1\/q
+Path End       : \zigbee:BUART:tx_state_1\/main_0
+Capture Clock  : \zigbee:BUART:tx_state_1\/clock_0
+Path slack     : 12991370p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       5120
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           5120
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_1\/clock_0                         macrocell6                 0      0  RISE       1
+
+Data path
+pin name                          model name   delay     AT     slack  edge  Fanout
+--------------------------------  -----------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_state_1\/q       macrocell6    1250   1250  12977782  RISE       1
+\zigbee:BUART:tx_state_1\/main_0  macrocell6    3870   5120  12991370  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_1\/clock_0                         macrocell6                 0      0  RISE       1
+
+
+
+++++ Path 10 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_state_1\/q
+Path End       : \zigbee:BUART:tx_bitclk\/main_0
+Capture Clock  : \zigbee:BUART:tx_bitclk\/clock_0
+Path slack     : 12991370p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       5120
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           5120
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_1\/clock_0                         macrocell6                 0      0  RISE       1
+
+Data path
+pin name                         model name   delay     AT     slack  edge  Fanout
+-------------------------------  -----------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_state_1\/q      macrocell6    1250   1250  12977782  RISE       1
+\zigbee:BUART:tx_bitclk\/main_0  macrocell9    3870   5120  12991370  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_bitclk\/clock_0                          macrocell9                 0      0  RISE       1
+
+
+
+++++ Path 11 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_state_1\/q
+Path End       : \zigbee:BUART:tx_state_2\/main_0
+Capture Clock  : \zigbee:BUART:tx_state_2\/clock_0
+Path slack     : 12991371p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       5119
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           5119
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_1\/clock_0                         macrocell6                 0      0  RISE       1
+
+Data path
+pin name                          model name   delay     AT     slack  edge  Fanout
+--------------------------------  -----------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_state_1\/q       macrocell6    1250   1250  12977782  RISE       1
+\zigbee:BUART:tx_state_2\/main_0  macrocell8    3869   5119  12991371  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_2\/clock_0                         macrocell8                 0      0  RISE       1
+
+
+
+++++ Path 12 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_state_1\/q
+Path End       : \zigbee:BUART:tx_state_0\/main_0
+Capture Clock  : \zigbee:BUART:tx_state_0\/clock_0
+Path slack     : 12991469p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       5021
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           5021
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_1\/clock_0                         macrocell6                 0      0  RISE       1
+
+Data path
+pin name                          model name   delay     AT     slack  edge  Fanout
+--------------------------------  -----------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_state_1\/q       macrocell6    1250   1250  12977782  RISE       1
+\zigbee:BUART:tx_state_0\/main_0  macrocell7    3771   5021  12991469  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_0\/clock_0                         macrocell7                 0      0  RISE       1
+
+
+
+++++ Path 13 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_state_0\/q
+Path End       : \zigbee:BUART:tx_state_1\/main_1
+Capture Clock  : \zigbee:BUART:tx_state_1\/clock_0
+Path slack     : 12991759p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4731
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4731
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_0\/clock_0                         macrocell7                 0      0  RISE       1
+
+Data path
+pin name                          model name   delay     AT     slack  edge  Fanout
+--------------------------------  -----------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_state_0\/q       macrocell7    1250   1250  12978170  RISE       1
+\zigbee:BUART:tx_state_1\/main_1  macrocell6    3481   4731  12991759  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_1\/clock_0                         macrocell6                 0      0  RISE       1
+
+
+
+++++ Path 14 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_state_0\/q
+Path End       : \zigbee:BUART:tx_bitclk\/main_1
+Capture Clock  : \zigbee:BUART:tx_bitclk\/clock_0
+Path slack     : 12991759p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4731
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4731
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_0\/clock_0                         macrocell7                 0      0  RISE       1
+
+Data path
+pin name                         model name   delay     AT     slack  edge  Fanout
+-------------------------------  -----------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_state_0\/q      macrocell7    1250   1250  12978170  RISE       1
+\zigbee:BUART:tx_bitclk\/main_1  macrocell9    3481   4731  12991759  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_bitclk\/clock_0                          macrocell9                 0      0  RISE       1
+
+
+
+++++ Path 15 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_state_0\/q
+Path End       : \zigbee:BUART:tx_state_0\/main_1
+Capture Clock  : \zigbee:BUART:tx_state_0\/clock_0
+Path slack     : 12991762p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4728
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4728
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_0\/clock_0                         macrocell7                 0      0  RISE       1
+
+Data path
+pin name                          model name   delay     AT     slack  edge  Fanout
+--------------------------------  -----------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_state_0\/q       macrocell7    1250   1250  12978170  RISE       1
+\zigbee:BUART:tx_state_0\/main_1  macrocell7    3478   4728  12991762  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_0\/clock_0                         macrocell7                 0      0  RISE       1
+
+
+
+++++ Path 16 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_state_0\/q
+Path End       : \zigbee:BUART:txn\/main_2
+Capture Clock  : \zigbee:BUART:txn\/clock_0
+Path slack     : 12991896p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4594
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4594
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_0\/clock_0                         macrocell7                 0      0  RISE       1
+
+Data path
+pin name                     model name   delay     AT     slack  edge  Fanout
+---------------------------  -----------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_state_0\/q  macrocell7    1250   1250  12978170  RISE       1
+\zigbee:BUART:txn\/main_2    macrocell5    3344   4594  12991896  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:txn\/clock_0                                macrocell5                 0      0  RISE       1
+
+
+
+++++ Path 17 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_state_0\/q
+Path End       : \zigbee:BUART:tx_state_2\/main_1
+Capture Clock  : \zigbee:BUART:tx_state_2\/clock_0
+Path slack     : 12991903p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4587
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4587
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_0\/clock_0                         macrocell7                 0      0  RISE       1
+
+Data path
+pin name                          model name   delay     AT     slack  edge  Fanout
+--------------------------------  -----------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_state_0\/q       macrocell7    1250   1250  12978170  RISE       1
+\zigbee:BUART:tx_state_2\/main_1  macrocell8    3337   4587  12991903  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_2\/clock_0                         macrocell8                 0      0  RISE       1
+
+
+
+++++ Path 18 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_bitclk\/q
+Path End       : \zigbee:BUART:tx_state_0\/main_5
+Capture Clock  : \zigbee:BUART:tx_state_0\/clock_0
+Path slack     : 12991975p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4515
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4515
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_bitclk\/clock_0                          macrocell9                 0      0  RISE       1
+
+Data path
+pin name                          model name   delay     AT     slack  edge  Fanout
+--------------------------------  -----------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_bitclk\/q        macrocell9    1250   1250  12991975  RISE       1
+\zigbee:BUART:tx_state_0\/main_5  macrocell7    3265   4515  12991975  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_0\/clock_0                         macrocell7                 0      0  RISE       1
+
+
+
+++++ Path 19 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_state_2\/q
+Path End       : \zigbee:BUART:txn\/main_4
+Capture Clock  : \zigbee:BUART:txn\/clock_0
+Path slack     : 12991978p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4512
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4512
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_2\/clock_0                         macrocell8                 0      0  RISE       1
+
+Data path
+pin name                     model name   delay     AT     slack  edge  Fanout
+---------------------------  -----------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_state_2\/q  macrocell8    1250   1250  12978393  RISE       1
+\zigbee:BUART:txn\/main_4    macrocell5    3262   4512  12991978  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:txn\/clock_0                                macrocell5                 0      0  RISE       1
+
+
+
+++++ Path 20 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_bitclk\/q
+Path End       : \zigbee:BUART:tx_state_2\/main_5
+Capture Clock  : \zigbee:BUART:tx_state_2\/clock_0
+Path slack     : 12991979p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4511
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4511
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_bitclk\/clock_0                          macrocell9                 0      0  RISE       1
+
+Data path
+pin name                          model name   delay     AT     slack  edge  Fanout
+--------------------------------  -----------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_bitclk\/q        macrocell9    1250   1250  12991975  RISE       1
+\zigbee:BUART:tx_state_2\/main_5  macrocell8    3261   4511  12991979  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_2\/clock_0                         macrocell8                 0      0  RISE       1
+
+
+
+++++ Path 21 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_bitclk\/q
+Path End       : \zigbee:BUART:tx_state_1\/main_5
+Capture Clock  : \zigbee:BUART:tx_state_1\/clock_0
+Path slack     : 12991980p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4510
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4510
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_bitclk\/clock_0                          macrocell9                 0      0  RISE       1
+
+Data path
+pin name                          model name   delay     AT     slack  edge  Fanout
+--------------------------------  -----------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_bitclk\/q        macrocell9    1250   1250  12991975  RISE       1
+\zigbee:BUART:tx_state_1\/main_5  macrocell6    3260   4510  12991980  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_1\/clock_0                         macrocell6                 0      0  RISE       1
+
+
+
+++++ Path 22 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_state_2\/q
+Path End       : \zigbee:BUART:tx_state_0\/main_4
+Capture Clock  : \zigbee:BUART:tx_state_0\/clock_0
+Path slack     : 12991980p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4510
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4510
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_2\/clock_0                         macrocell8                 0      0  RISE       1
+
+Data path
+pin name                          model name   delay     AT     slack  edge  Fanout
+--------------------------------  -----------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_state_2\/q       macrocell8    1250   1250  12978393  RISE       1
+\zigbee:BUART:tx_state_0\/main_4  macrocell7    3260   4510  12991980  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_0\/clock_0                         macrocell7                 0      0  RISE       1
+
+
+
+++++ Path 23 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_state_2\/q
+Path End       : \zigbee:BUART:tx_state_1\/main_3
+Capture Clock  : \zigbee:BUART:tx_state_1\/clock_0
+Path slack     : 12991982p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4508
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4508
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_2\/clock_0                         macrocell8                 0      0  RISE       1
+
+Data path
+pin name                          model name   delay     AT     slack  edge  Fanout
+--------------------------------  -----------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_state_2\/q       macrocell8    1250   1250  12978393  RISE       1
+\zigbee:BUART:tx_state_1\/main_3  macrocell6    3258   4508  12991982  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_1\/clock_0                         macrocell6                 0      0  RISE       1
+
+
+
+++++ Path 24 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_state_2\/q
+Path End       : \zigbee:BUART:tx_bitclk\/main_3
+Capture Clock  : \zigbee:BUART:tx_bitclk\/clock_0
+Path slack     : 12991982p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4508
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4508
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_2\/clock_0                         macrocell8                 0      0  RISE       1
+
+Data path
+pin name                         model name   delay     AT     slack  edge  Fanout
+-------------------------------  -----------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_state_2\/q      macrocell8    1250   1250  12978393  RISE       1
+\zigbee:BUART:tx_bitclk\/main_3  macrocell9    3258   4508  12991982  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_bitclk\/clock_0                          macrocell9                 0      0  RISE       1
+
+
+
+++++ Path 25 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_bitclk\/q
+Path End       : \zigbee:BUART:txn\/main_6
+Capture Clock  : \zigbee:BUART:txn\/clock_0
+Path slack     : 12992232p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4258
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4258
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_bitclk\/clock_0                          macrocell9                 0      0  RISE       1
+
+Data path
+pin name                    model name   delay     AT     slack  edge  Fanout
+--------------------------  -----------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_bitclk\/q  macrocell9    1250   1250  12991975  RISE       1
+\zigbee:BUART:txn\/main_6   macrocell5    3008   4258  12992232  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:txn\/clock_0                                macrocell5                 0      0  RISE       1
+
+
+
+++++ Path 26 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:tx_state_2\/q
+Path End       : \zigbee:BUART:tx_state_2\/main_3
+Capture Clock  : \zigbee:BUART:tx_state_2\/clock_0
+Path slack     : 12992237p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4253
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4253
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_2\/clock_0                         macrocell8                 0      0  RISE       1
+
+Data path
+pin name                          model name   delay     AT     slack  edge  Fanout
+--------------------------------  -----------  -----  -----  --------  ----  ------
+\zigbee:BUART:tx_state_2\/q       macrocell8    1250   1250  12978393  RISE       1
+\zigbee:BUART:tx_state_2\/main_3  macrocell8    3003   4253  12992237  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_2\/clock_0                         macrocell8                 0      0  RISE       1
+
+
+
+++++ Path 27 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/ce0_reg
+Path End       : \zigbee:BUART:tx_state_0\/main_2
+Capture Clock  : \zigbee:BUART:tx_state_0\/clock_0
+Path slack     : 12992332p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4158
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4158
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/clock               datapathcell2              0      0  RISE       1
+
+Data path
+pin name                                       model name     delay     AT     slack  edge  Fanout
+---------------------------------------------  -------------  -----  -----  --------  ----  ------
+\zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/ce0_reg  datapathcell2   1000   1000  12978773  RISE       1
+\zigbee:BUART:tx_state_0\/main_2               macrocell7      3158   4158  12992332  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_0\/clock_0                         macrocell7                 0      0  RISE       1
+
+
+
+++++ Path 28 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/ce0_reg
+Path End       : \zigbee:BUART:tx_state_2\/main_2
+Capture Clock  : \zigbee:BUART:tx_state_2\/clock_0
+Path slack     : 12992350p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4140
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4140
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/clock               datapathcell2              0      0  RISE       1
+
+Data path
+pin name                                       model name     delay     AT     slack  edge  Fanout
+---------------------------------------------  -------------  -----  -----  --------  ----  ------
+\zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/ce0_reg  datapathcell2   1000   1000  12978773  RISE       1
+\zigbee:BUART:tx_state_2\/main_2               macrocell8      3140   4140  12992350  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_2\/clock_0                         macrocell8                 0      0  RISE       1
+
+
+
+++++ Path 29 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/ce0_reg
+Path End       : \zigbee:BUART:tx_state_1\/main_2
+Capture Clock  : \zigbee:BUART:tx_state_1\/clock_0
+Path slack     : 12992362p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4128
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4128
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/clock               datapathcell2              0      0  RISE       1
+
+Data path
+pin name                                       model name     delay     AT     slack  edge  Fanout
+---------------------------------------------  -------------  -----  -----  --------  ----  ------
+\zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/ce0_reg  datapathcell2   1000   1000  12978773  RISE       1
+\zigbee:BUART:tx_state_1\/main_2               macrocell6      3128   4128  12992362  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_1\/clock_0                         macrocell6                 0      0  RISE       1
+
+
+
+++++ Path 30 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/ce0_reg
+Path End       : \zigbee:BUART:tx_bitclk\/main_2
+Capture Clock  : \zigbee:BUART:tx_bitclk\/clock_0
+Path slack     : 12992362p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4128
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4128
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/clock               datapathcell2              0      0  RISE       1
+
+Data path
+pin name                                       model name     delay     AT     slack  edge  Fanout
+---------------------------------------------  -------------  -----  -----  --------  ----  ------
+\zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/ce0_reg  datapathcell2   1000   1000  12978773  RISE       1
+\zigbee:BUART:tx_bitclk\/main_2                macrocell9      3128   4128  12992362  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_bitclk\/clock_0                          macrocell9                 0      0  RISE       1
+
+
+
+++++ Path 31 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/ce1_reg
+Path End       : \zigbee:BUART:tx_state_2\/main_4
+Capture Clock  : \zigbee:BUART:tx_state_2\/clock_0
+Path slack     : 12992651p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       3839
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           3839
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/clock               datapathcell2              0      0  RISE       1
+
+Data path
+pin name                                       model name     delay     AT     slack  edge  Fanout
+---------------------------------------------  -------------  -----  -----  --------  ----  ------
+\zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/ce1_reg  datapathcell2   1000   1000  12992651  RISE       1
+\zigbee:BUART:tx_state_2\/main_4               macrocell8      2839   3839  12992651  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_2\/clock_0                         macrocell8                 0      0  RISE       1
+
+
+
+++++ Path 32 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/ce1_reg
+Path End       : \zigbee:BUART:txn\/main_5
+Capture Clock  : \zigbee:BUART:txn\/clock_0
+Path slack     : 12992655p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       3835
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           3835
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/clock               datapathcell2              0      0  RISE       1
+
+Data path
+pin name                                       model name     delay     AT     slack  edge  Fanout
+---------------------------------------------  -------------  -----  -----  --------  ----  ------
+\zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/ce1_reg  datapathcell2   1000   1000  12992651  RISE       1
+\zigbee:BUART:txn\/main_5                      macrocell5      2835   3835  12992655  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:txn\/clock_0                                macrocell5                 0      0  RISE       1
+
+
+
+++++ Path 33 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/ce1_reg
+Path End       : \zigbee:BUART:tx_state_1\/main_4
+Capture Clock  : \zigbee:BUART:tx_state_1\/clock_0
+Path slack     : 12992665p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       3825
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           3825
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/clock               datapathcell2              0      0  RISE       1
+
+Data path
+pin name                                       model name     delay     AT     slack  edge  Fanout
+---------------------------------------------  -------------  -----  -----  --------  ----  ------
+\zigbee:BUART:sTX:sCLOCK:TxBitClkGen\/ce1_reg  datapathcell2   1000   1000  12992651  RISE       1
+\zigbee:BUART:tx_state_1\/main_4               macrocell6      2825   3825  12992665  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:tx_state_1\/clock_0                         macrocell6                 0      0  RISE       1
+
+
+
+++++ Path 34 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \zigbee:BUART:txn\/q
+Path End       : \zigbee:BUART:txn\/main_0
+Capture Clock  : \zigbee:BUART:txn\/clock_0
+Path slack     : 12993001p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (zigbee_IntClock:R#1 vs. zigbee_IntClock:R#2)   13000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                 12996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       3489
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           3489
+ 
+Launch Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:txn\/clock_0                                macrocell5                 0      0  RISE       1
+
+Data path
+pin name                   model name   delay     AT     slack  edge  Fanout
+-------------------------  -----------  -----  -----  --------  ----  ------
+\zigbee:BUART:txn\/q       macrocell5    1250   1250  12993001  RISE       1
+\zigbee:BUART:txn\/main_0  macrocell5    2239   3489  12993001  RISE       1
+
+Capture Clock Path
+pin name                                                  model name             delay     AT  edge  Fanout
+--------------------------------------------------------  ---------------------  -----  -----  ----  ------
+ClockBlock/udb_div_0                                      m0s8clockblockcell         0      0  RISE       1
+ClockGenBlock/gen_clk_in_0                                m0s8clockgenblockcell      0      0  RISE       1
+ClockGenBlock/gen_clk_out_0                               m0s8clockgenblockcell      0      0  RISE       1
+\zigbee:BUART:txn\/clock_0                                macrocell5                 0      0  RISE       1
+
+
+===================================================================== 
+                    End of Detailed Report for all timing paths 
+##################################################################### 
+
+##################################################################### 
+                    End of Timing Report 
+##################################################################### 
+

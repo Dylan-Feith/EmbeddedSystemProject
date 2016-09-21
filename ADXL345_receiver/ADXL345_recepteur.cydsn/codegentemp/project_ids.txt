@@ -1,0 +1,5 @@
+C:\Users\Dylan\Desktop\PSoC Bon\ADXL345\ADXL345_recepteur\ADXL345_recepteur.cydsn\ADXL345_recepteur.cyprj|22fdb27b-1f72-4e76-91bc-b8aae377bd8a
+C:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj|3e1b971a-3a88-466d-a217-b5784d19c1d1
+C:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\psoc\content\cycomponentlibraryupdates\CyComponentLibraryUpdates.cylib\CyComponentLibraryUpdates.cyprj|6a9cbef9-f7c1-4245-9cc0-17a05c1b3b5e
+C:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CyComponentLibrary.cyprj|7474945d-197f-479d-9f3b-e89690292cfb
+C:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\CyPrimitives.cyprj|2d32da73-0e33-4128-9aed-025ae39f6747

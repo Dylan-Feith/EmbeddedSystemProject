@@ -1,0 +1,5 @@
+C:\Users\Dylan\Desktop\ADXL345_sleep_xbee_wdt_topdesign\ADXL345_sleep_xbee.cydsn\ADXL345_sleep_xbee.cyprj|d1fedee2-6e17-4118-805b-9dfe319fab90
+C:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj|77fc3a66-9ec1-444e-a95b-da7f48a47436
+C:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\psoc\content\cycomponentlibraryupdates\CyComponentLibraryUpdates.cylib\CyComponentLibraryUpdates.cyprj|d0fe1666-446e-4252-9531-85ccc3f7f804
+C:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CyComponentLibrary.cyprj|d68581fe-e004-4a89-993a-766d8401af47
+C:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\CyPrimitives.cyprj|04e22822-b0b7-44b8-bba0-b863def78247
