@@ -9,6 +9,8 @@ This small system cyclically and wirelessly send data from an accelerometer.
 This code allows the microcontroller PSoC 4 to take data from the accelerometer ADXL345 and send it with Xbee (Selected because it is used a lot in industry and we wanted an "industriable" demonstrator).
 In this code, you can find the one for the transmitter system and the one for the receiver system (composed of an Xbee and a PSoC 4).
 
+Take a look at the poster on which you can find pictures and some data!
+
 
 
 
